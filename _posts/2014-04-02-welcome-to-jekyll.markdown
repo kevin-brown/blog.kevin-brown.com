@@ -1,7 +1,8 @@
 ---
 layout: post
-title:  "Welcome to Jekyll!"
-date:   2014-04-02 15:11:14
+title: Welcome to Jekyll!
+author: Kevin Brown
+date: 2014-04-02 15:11:14
 categories: jekyll update
 ---
 

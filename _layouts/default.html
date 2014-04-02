@@ -3,41 +3,69 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
         <title>{{ page.title }}</title>
-        <meta name="viewport" content="width=device-width">
 
-        <!-- syntax highlighting CSS -->
-        <link rel="stylesheet" href="/css/syntax.css">
+        <link href="http://kevinbrown.in/includes/bootstrap.min.css" rel="stylesheet" />
+        <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+        <link href="http://kevinbrown.in/styles/global.css" rel="stylesheet" />
 
-        <!-- Custom CSS -->
-        <link rel="stylesheet" href="/css/main.css">
+        <link rel="stylesheet" href="/styles/syntax.css">
+
+        <link rel="stylesheet" href="/styles/blog.css">
     </head>
     <body>
-        <div class="site">
-            <div class="header">
-                <h1 class="title"><a href="/">{{ site.name }}</a></h1>
-                <a class="extra" href="/">home</a>
-            </div>
+        <header class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <a href="/" class="navbar-brand">Kevin Brown</a>
+                </div>
 
+                <nav class="collapse navbar-collapse" role="navigation">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="http://kevinbrown.in/#/about">
+                                About
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://kevinbrown.in/#/projects">
+                                Projects
+                            </a>
+                        </li>
+                        <li class="active">
+                            <a href="http://blog.kevinbrown.in/">
+                                Blog
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav pull-right">
+                        <li>
+                            <a href="https://github.com/kevin-brown">
+                                <i class="icon-github"></i>
+                                GitHub
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://careers.stackoverflow.com/kbrown">
+                                <i class="icon-file"></i>
+                                R&eacute;sum&eacute;
+                            </a>
+                        </li>
+                        <li>
+                            <a href="mailto:kevin@kevinbrown.in">
+                                <i class="icon-envelope"></i>
+                                Email
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <div class="container">
             {{ content }}
-
-            <div class="footer">
-                <div class="contact">
-                    <p>
-                        Kevin Brown<br />
-                        Application Developer
-                    </p>
-                </div>
-                <div class="contact">
-                    <p>
-                        <a href="https://github.com/kevin-brown">
-                            github.com/kevin-brown
-                        </a>
-                        <br />
-                        kevin@kevinbrown.in
-                    </p>
-                </div>
-            </div>
         </div>
     </body>
 </html>
