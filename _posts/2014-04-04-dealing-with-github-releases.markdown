@@ -54,7 +54,7 @@ just a single person who deals with releases.  What is also great about this is
 that anyone can later publish that release, so you aren't stuck waiting for the
 initial creator to publish it for you.
 
-![Anyone can draft a release at any time.](http://i.imgur.com/N94BdAN.png)
+![Anyone can draft a release at any time.][draft format]
 
 The name that is attached to a release when it is drafted, which should always
 be the person who originally drafted the release, will also be the name
@@ -76,5 +76,6 @@ whether it is for a project that is small or large.
 
 [releases]: https://github.com/blog/1547-release-your-software
 [times are off]: /images/github-releases-times.png
-[wrong-email-sender]: /images/github-releases-wrong-email.png
-[wrong-news-feed]: /images/github-releases-news-feed.png
+[draft format]: /images/github-releases-draft.png
+[wrong email sender]: /images/github-releases-wrong-email.png
+[wrong news feed]: /images/github-releases-news-feed.png
