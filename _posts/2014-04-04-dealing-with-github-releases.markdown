@@ -62,8 +62,8 @@ associated with the publishing of the release.  Even if they are not the ones
 who hit the "Publish release" button, GitHub will forever remember them as the
 person who drafted and published the release.
 
-![The email has the wrong sender.][wrong-email-sender]
-![And the news feed will say the same.][wrong-news-feed]
+![The email has the wrong sender.][wrong email sender]
+![And the news feed will say the same.][wrong news feed]
 
 This may cause some confusion, as the wrong person will be marked as the sender
 of the email that is automatically sent when a release is published.  They will
