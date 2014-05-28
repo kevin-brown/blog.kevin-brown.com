@@ -113,6 +113,12 @@ the code base.
 focusing on having clear and readable code without unintended side effects.
 Because it still compiles down to JavaScript, there is no impact to the end
 user and endless benefits to developers who are diving into the code.
+CoffeeScript provides an [abstraction layer for classes][coffeescript-classes]
+similar to other implementations and replaces the [old method][old-classes]
+which did not scale well and were difficult to use.  There are other benefits to
+future developers, such as not having to [worry about semicolons][semicolons] or
+[inconsistent coding styles][coding-style] (we now use
+[CoffeeLint][coffeelint]).
 
 [SASS][sass] is a CSS preprocessor that allows Select2 to split up the CSS files
 and include them within the distributed build as a single file.  This also
@@ -174,17 +180,22 @@ guide that will be created.
 
 [alomond]: https://github.com/jrburke/almond
 [chosen]: http://harvesthq.github.io/chosen/
+[coding-style]: https://github.com/ivaynberg/select2/issues/655
+[coffeelint]: http://www.coffeelint.org
 [coffeescript]: http://coffeescript.org
+[coffeescript-classes]: http://coffeescript.org/#classes
 [contributors]: https://github.com/ivaynberg/select2/graphs/contributors
 [gettext]: https://en.wikipedia.org/wiki/Gettext
 [github-pages]: https://pages.github.com/
 [grunt]: http://gruntjs.com
 [gulp]: http://gulpjs.com
 [jquery]: http://jquery.com
+[old-classes]: http://michaux.ca/articles/class-based-inheritance-in-javascript
 [qunit]: http://qunit.com
 [rjs]: https://github.com/jrburke/r.js/
 [sass]: http://sass-lang.com
 [select2]: http://ivaynberg.github.io/select2/
+[semicolons]: http://mislav.uniqpath.com/2010/05/semicolons/
 [semver]: http://semver.org
 [travis-ci]: https://travis-ci.org
 
