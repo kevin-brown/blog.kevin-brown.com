@@ -187,7 +187,7 @@ Custom translations (those not provided by Select2) will need to be migrated
 over on their own, and instructions will be provided in the Select2 migration
 guide that will be created.
 
-[alomond]: https://github.com/jrburke/almond
+[almond]: https://github.com/jrburke/almond
 [chosen]: http://harvesthq.github.io/chosen/
 [coding-style]: https://github.com/ivaynberg/select2/issues/655
 [coffeelint]: http://www.coffeelint.org
