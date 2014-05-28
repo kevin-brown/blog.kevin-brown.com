@@ -2,7 +2,7 @@
 layout: post
 title: The Future of Select2
 author: kevin-brown
-date: 2014-05-25 21:30:00 EDT
+date: 2014-05-28 21:30:00 EDT
 category: select2
 tags: select2 programming
 ---
@@ -42,7 +42,11 @@ taken to constantly ensure it works.
 
 Select2 maintains all of the documentation for a version within a single page,
 which has resulted in a page full of generalized examples with sparse
-documentation for the API and a minimal change log between versions.
+documentation for the API and a minimal change log between versions.  This has
+proven to be problematic, primarily because the documentation is not easy to
+navigate and often was not correct, containing many examples that demonstrated
+basic options that could be passed into Select2, but was missing some of the
+more complex but common examples.
 
 ### Testing
 
@@ -51,11 +55,22 @@ issue revolved around getting a test runner set up and a few basic tests
 created.  Because Select2 was so tightly coupled, it was difficult to isolate
 individual components and never became a reality.
 
+### Organization
+
+Select2 contains all of the code base within a single directory, making it easy
+to find the required files, but difficult for those who use package managers
+such as Bower to download their files.  There have been many requests to move
+the files into other separate directories, but this would require a breaking
+release, and as a result it was always pushed off to Select2 4.0.
+
 ## The future
 
 Select2 4.0 will be a large refactoring of the current code base in an attempt
 to make it easier to maintain in the future, as well as opening the doors to
-other things such as unit testing and modularizing the code.
+other things such as unit testing and splitting the code into modules.  It also
+splits up the code base to make it easier to hook into, so users will not longer
+have to modify the core code in order to get things to work exactly how they
+want it to.
 
 ### Build and task runner
 
@@ -68,7 +83,15 @@ resulting in GruntJS being chosen in the end.
 ### Documentation
 
 Instead of being contained on a single page, the documentation will now be
-organized across multiple pages.
+organized across multiple pages.  This will allow for more complex examples with
+more detailed explanations, as well as additional pages such as a contributing
+guide and more detailed change log.
+
+The documentation will also be stored within the main repository and will be
+cloned to the [GitHub Pages][github-pages] branch by a script, so it will be
+easier to keep the documentation more up to date.  This will also allow the
+documentation to be versioned, so previous versions of the documentation will
+still be available through the documentation website.
 
 ### Testing
 
@@ -82,12 +105,64 @@ focusing on having clear and readable code without unintended side effects.
 Because it still compiles down to JavaScript, there is no impact to the end
 user and endless benefits to developers who are diving into the code.
 
-[select2]: http://ivaynberg.github.io/select2/
+### AMD modules and loading
+
+It has been requested in the past for AMD and RequireJS support to be added to
+Select2, and for one reason or another it never actually happened.  Select2 4.0
+is written entirely using AMD and includes [Almond][almond] as a basic AMD
+loader, so users who do not already use AMD will be able to still use Select2.
+The distributed versions will be automatically compiled using [r.js][rjs] and
+will include all of the required modules, with optional versions that will not
+include the AMD loader or will include all of the possible modules.
+
+This opens the door to custom builds in the future, for those who only need
+Select2 for specific cases such as only single selects or not needing support
+for AJAX data.  A separate blog post will be created about how Select2 uses AMD
+and the challenges that were faced when setting it up.
+
+## Backwards compatibility
+
+The goal for Select2 4.0 is to maintain backwards compatibility transparently
+with past versions of Select2, down to Select2 3.0.  With 45 individual options
+that can be passed to Select2 when initializing the widget, this goal may not be
+possible.  The most commonly used options, such as the formatters and different
+data sources will be implemented, though they may have to be included as
+separate modules not included in the main build.
+
+### Default options
+
+The default options are no longer a basic object with keys that map to options
+that Select2 is initialized with.  It is now an actual class (as close as
+JavaScript can get) that can be used to set the defaults.  This may be switched
+to allow more complex setting of default options, such as those which depend on
+other options.
+
+### Translations
+
+Translations will no longer be loaded by just including the translation file
+below Select2 in the page.  A translations module will be included in the same
+form as the default options, and translations will be able to be loaded
+asynchronously and applied when needed.  They will also no longer be done using
+formatters, but instead will work on basic strings (with parameters) similar to
+[gettext][gettext] works for other languages, and those strings will be used by
+the default formatters.
+
+English will still remain as the default language for Select2, though the
+translation files created by contributors will be migrated to the new format.
+Custom translations (those not provided by Select2) will need to be migrated
+over on their own, and instructions will be provided in the Select2 migration
+guide that will be created.
+
+[alomond]: https://github.com/jrburke/almond
 [chosen]: http://harvesthq.github.io/chosen/
+[coffeescript]: http://coffeescript.org
 [contributors]: https://github.com/ivaynberg/select2/graphs/contributors
-[semver]: http://semver.org
+[gettext]: https://en.wikipedia.org/wiki/Gettext
+[github-pages]: https://pages.github.com/
 [grunt]: http://gruntjs.com
 [gulp]: http://gulpjs.com
-[coffeescript]: http://coffeescript.org
-[qunit]: http://qunit.com
 [jquery]: http://jquery.com
+[qunit]: http://qunit.com
+[rjs]: https://github.com/jrburke/r.js/
+[select2]: http://ivaynberg.github.io/select2/
+[semver]: http://semver.org
