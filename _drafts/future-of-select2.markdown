@@ -74,6 +74,8 @@ want it to.
 
 ### Build and task runner
 
+![GruntJS Logo][grunt-logo]
+
 [GruntJS][grunt] was chosen because of the wide popularity and extensive support
 for other plugins that has been added by the community.  While other task
 runners such as [GulpJS][gulp] were considered, the lack of support for plugins
@@ -96,16 +98,33 @@ still be available through the documentation website.
 ### Testing
 
 [QUnit][qunit], the unit test framework used by [jQuery][jquery], was selected
-as the framework that will run the tests for Select2.
+as the framework that will run the tests for Select2.  While other test runners
+exist, QUnit was selected because it was easy to create tests using and could be
+run from within a browser, making it easy to test the cross-browser
+compatibility within Select2.  It can also be run within within Grunt, allowing
+tests to be run by [Travis CI][travis-ci] for pull requests and other commits to
+the code base.
 
-### CoffeeScript instead of JavaScript
+### CoffeeScript and SASS
+
+![CoffeeScript logo][coffeescript-logo] ![SASS logo][sass-logo]
 
 [CoffeeScript][coffeescript] is a language that compiles in JavaScript while
 focusing on having clear and readable code without unintended side effects.
 Because it still compiles down to JavaScript, there is no impact to the end
 user and endless benefits to developers who are diving into the code.
 
+[SASS][sass] is a CSS preprocessor that allows Select2 to split up the CSS files
+and include them within the distributed build as a single file.  This also
+allows the CSS to be written with variables, so most options for Select2 are now
+configurable for those who are interested in compiling their own files.
+Previously, Select2 was restricted to a neutral color scheme, but this opens the
+door to custom color schemes that can match whatever environment Select2 is used
+in.
+
 ### AMD modules and loading
+
+![RequireJS logo][requirejs-logo]
 
 It has been requested in the past for AMD and RequireJS support to be added to
 Select2, and for one reason or another it never actually happened.  Select2 4.0
@@ -124,10 +143,10 @@ and the challenges that were faced when setting it up.
 
 The goal for Select2 4.0 is to maintain backwards compatibility transparently
 with past versions of Select2, down to Select2 3.0.  With 45 individual options
-that can be passed to Select2 when initializing the widget, this goal may not be
-possible.  The most commonly used options, such as the formatters and different
-data sources will be implemented, though they may have to be included as
-separate modules not included in the main build.
+that can be passed to Select2 when initializing the widget, this goal may not
+actually be possible but we will try our best.  The most commonly used options,
+such as the formatters and different data sources will be implemented, though
+they may have to be included as separate modules not included in the main build.
 
 ### Default options
 
@@ -164,5 +183,12 @@ guide that will be created.
 [jquery]: http://jquery.com
 [qunit]: http://qunit.com
 [rjs]: https://github.com/jrburke/r.js/
+[sass]: http://sass-lang.com
 [select2]: http://ivaynberg.github.io/select2/
 [semver]: http://semver.org
+[travis-ci]: https://travis-ci.org
+
+[coffeescript-logo]: /images/logos/coffeescript.png
+[grunt-logo]: /images/logos/grunt.png
+[requirejs-logo]: /images/logos/requirejs.png
+[sass-logo]: /images/logos/sass.png
