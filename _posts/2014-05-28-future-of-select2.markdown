@@ -2,7 +2,7 @@
 layout: post
 title: The Future of Select2
 author: kevin-brown
-date: 2014-05-28 21:30:00 EDT
+date: 2014-05-28 14:00:00 EDT
 category: select2
 tags: select2 programming
 ---
@@ -119,6 +119,15 @@ which did not scale well and were difficult to use.  There are other benefits to
 future developers, such as not having to [worry about semicolons][semicolons] or
 [inconsistent coding styles][coding-style] (we now use
 [CoffeeLint][coffeelint]).
+
+For the most part, you will not have to change your style when writing code in
+CoffeeScript when compared to JavaScript.  Many of the "tricks" are optional and
+the CoffeeScript compiler will work without them.  There are a few exceptions,
+such as the `in` operator (use `of` instead), but these are not used that often
+and the compiled code will show the problem if the compiler does not point it
+out.  Conditionals which require braces will also fail to compile, as
+CoffeeScript uses different levels of indentation to signal different blocks of
+code.
 
 [SASS][sass] is a CSS preprocessor that allows Select2 to split up the CSS files
 and include them within the distributed build as a single file.  This also
