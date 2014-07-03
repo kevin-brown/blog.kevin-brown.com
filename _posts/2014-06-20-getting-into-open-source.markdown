@@ -2,7 +2,7 @@
 layout: post
 title: Getting into Open Source
 author: kevin-brown
-date: 2014-04-11 21:30:00 EDT
+date: 2014-06-20 20:00:00 EDT
 category: foss
 tags: foss programming
 ---
@@ -30,12 +30,11 @@ few issues that I reported (and later fixed).  The project was added to my
 watch list on GitHub and I eventually became a core committer to the project,
 still maintaining it even now that I have moved away from it.
 
-<div class="thumbnail">
-    <img src="http://i.imgur.com/ryt6KTg.png" alt="GitHub Explore" />
-    <div class="caption muted text-center">
-        GitHub Explore makes it easy to find open source projects that are
-        interesting.
-    </div>
+![GitHub Explore preview][github-explore-img]
+
+<div class="text-muted text-center">
+    GitHub Explore makes it easy to find open source projects that are
+    interesting.
 </div>
 
 Some websites offer ways to find interesting open source repositories, such as
@@ -60,15 +59,44 @@ issues.
 
 ### Issue trackers
 
-GitHub and Bitbucket have their own, but others such as [Bugzilla][bugzilla]
-exist.  Make sure to familiarize yourself with how issues are created and what
-is supposed to go there.
+Projects hosted on GitHub and Bitbucket typically use the issue trackers that
+are included, but others such as [Bugzilla][bugzilla] and [Trac][trac] are often
+set up for larger projects which need more than what GitHub and Bitbucket
+provide.  Before creating new tickets in issue trackers, make sure to
+familiarize yourself with any restrictions that projects have set in place as to
+what needs to be included.  For bug reports, you should try your best to include
+instructions on how to quickly reproduce the issue, what you think should have
+happened, and any debugging information that has been made available.
+
+![GitHub's contributing notice][pr-contributing]
+
+<div class="text-muted text-center">
+    GitHub displays a notice if the repository contains a contributing guide
+    when you try to create an issue or pull request.
+</div>
 
 ### Instant messaging
 
-[HipChat][hipchat], [IRC][irc], and other solutions.  The point is that you can
-communicate with anyone who is online instantly.
+When working on a project that is actively being developed, it is not unusual to
+that an [IRC][irc] channel has been created for support and other communication.
+Often the issue trackers are reserved only for issues, so general support
+questions and implementation glitches will be closed off as they are not
+allowed.
 
+Now that [HipChat][hipchat] is free for everyone, it is becoming a common
+channel for communication within projects.  HipChat was
+[acquired][hipchat-acquired] by [Atlassian][atlassian], the creators of
+Bitbucket and provides integrations with products such as [Heroku][heroku] and
+[UserVoice][uservoice],
+
+![HipChat integration example][hipchat-integrations]
+
+<div class="text-muted text-center">
+    HipChat integrations bring useful information into the mix when developing
+    with others.
+</div>
+
+<!-- Never finished this, maybe some other time...
 ### Mailing lists
 
 Yup, just amazing email.  Whether self hosted or through
@@ -77,14 +105,24 @@ archives to see what is usually done there.
 
 Fixing issues
 -------------
-As you use the software, you are almost guarenteed to find issues as you use
+As you use the software, you are almost guaranteed to find issues as you use
 the code more and more.  Report the bug with a lot of useful information, ask
 questions on IRC or mailing lists, get things done.
+-->
 
+[atlassian]: https://www.atlassian.com
+[bugzilla]: http://www.bugzilla.org
 [bitbucket]: https://bitbucket.com
 [github]: https://github.com
 [github-explore]: https://github.com/explore
-[google-groups]: https://groups.google.com/forum/
+[github-explore-img]: /images/github-explore.png
+[google-groups]: https://groups.google.com/forum
+[heroku]: https://www.uservoice.com
 [hipchat]: https://www.hipchat.com
+[hipchat-acquired]: https://blog.hipchat.com/2012/03/07/weve-been-acquired-by-atlassian/
+[hipchat-integrations]: /images/hipchat-integrations.png
 [irc]: https://en.wikipedia.org/wiki/Internet_Relay_Chat
+[pr-contributing]: /images/github-pr-contributing.png
 [select2]: https://github.com/ivaynberg/select2
+[trac]: https://en.wikipedia.org/wiki/Trac
+[uservoice]: https://www.uservoice.com

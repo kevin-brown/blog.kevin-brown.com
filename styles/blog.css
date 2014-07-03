@@ -10,3 +10,7 @@
 .post-meta {
     margin-right: 12px;
 }
+
+img {
+    max-width: 100%;
+}
