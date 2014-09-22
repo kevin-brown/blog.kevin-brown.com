@@ -42,7 +42,7 @@ Setuptools has a built-in build command that can be executed using
 `setup.py build` which we can tie into for building the program. All setuptools
 commands must be run form the source directory, which makes it difficult to
 support VPATH builds, but not impossible. Before running the `build` command,
-we must tell Automake to move into that directory, and we must tell Setuptools
+we must tell Automake to move into that directory, and we must tell setuptools
 what the actual build directory is.
 
 ~~~
@@ -52,7 +52,36 @@ all-local:
         --verbose)
 ~~~
 
+The first part of this snippet, `cd $(srcdir);`, tells Automake to move into the
+source directory, where all of the Python code as well as the `setup.py` file
+is located. This is important because, as mentioned above, the `setup.py`
+commands can only be run from the source directory. `srcdir` is a variable set
+by Automake that can be used from anywhere within the Makefile.
 
+The second part of this snippet is a bit more complex and consists of a few
+parts.
+
+~~~
+$(PYTHON) setup.py build \
+    --build-base $(shell readlink -f $(builddir))/build \
+    --verbose`
+~~~
+
+The first section, `$(PYTHON) setup.py build`, tells Automake to use the
+active Python binary to run the `setup.py build` command. This allows us to
+support any Python binaries, no matter where in the system they are located.
+`PYTHON` is defined by Automake for Python projects and can be adjusted to point
+at any binary.
+
+The second section, `--build-base $(shell readlink -f $(builddir))/build`, tells
+setuptools to set the build location to `$(builddir)/build`, using `readline` to
+follow any relative directories that Automake may set. `builddir` is a variable
+set by Automake that points to the build directory, where any build data should
+be stored in. This is important, as the `builddir` may be different than the
+`srcdir`, and the `srcdir` may be read-only.
+
+The last part, `--verbose`, tells setuptools to do it in verbose mode and can be
+omitted if needed.
 
 [gnu-build]: https://en.wikipedia.org/wiki/GNU_build_system
 [pip]: https://pip.pypa.io/
