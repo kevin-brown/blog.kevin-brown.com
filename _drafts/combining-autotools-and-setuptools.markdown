@@ -119,6 +119,24 @@ Similar to how pip does it, we store this file in the python package's
 directory, so it can be easily found and will not be removed because of other
 processes.
 
+## `make uninstall`
+
+When a user wants to uninstall the program from their system, they should be
+using `make uninstall`. This should work exactly like `pip remove [program]`,
+and it must completely remove any traces of your program. You can override this
+target with `uninstall-local` so it will always be run.
+
+~~~
+uninstall-local:
+    cat $(DESTDIR)$(pkgpythondir)/install_files.txt | xargs rm -rf
+    rm -rf $(DESTDIR)$(pkgpythondir)
+~~~
+
+This does not call `setup.py` at all, as by default setuptools provides no way
+to uninstall installed packages. This relies on the installed files being
+recorded during the installation process, and the same file is used to remove
+all of the extra installed files. We also make sure to completely remove the
+Python package directory, as this is not removed by default.
 
 [gnu-build]: https://en.wikipedia.org/wiki/GNU_build_system
 [pip]: https://pip.pypa.io/
