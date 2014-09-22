@@ -2,7 +2,7 @@
 layout: post
 title: AMD and jQuery Plugins
 author: kevin-brown
-date: 2014-05-30 19:00:00 EDT
+date: 2014-09-22 9:00:00 EDT
 category: programming
 tags: jquery select2 programming
 ---
@@ -22,8 +22,8 @@ through any additional hoops.
 Luckily, you can support users without AMD loaders transparently by including an
 AMD loader in one the compiled version of your plugin.  In order to make things
 easier for those who already use AMD or are willing to handle loading on their
-own, it is recommended to include a version fo your plugin without the AMD
-loader as well.
+own, it is recommended to include a version of your plugin without the AMD
+loader as well, for those who are already using AMD in their projects.
 
 ## Choosing the best AMD loader
 
@@ -46,7 +46,47 @@ for the AMD specification and is actively developed.
 
 [Almond][almond] was created as a lightweight alternative to Require.JS that
 still supported enough of the AMD specification so it would be compatible with
-the r.js compiler.
+the r.js compiler.  Before it is minified and compressed, Almond comes in at
+15kb, but it has been shown to compress down to around 1kb, making it one of the
+best AMD loaders for jQuery plugins.
+
+## Using jQuery with AMD modules
+
+By default, jQuery will always create a global `window.jQuery` object for
+itself, no matter how it is imported into the application.  When jQuery detects
+an AMD loader, it will also register itself as the named module `jquery`,
+allowing it to be used in applications which are using an AMD loader.
+
+jQuery will only register itself as an AMD plugin if the AMD loader is already
+present when jQuery is loaded.  As a third party plugin, you cannot guarantee
+that an AMD loader will be present ahead of jQuery, especially if the only AMD
+loader that is being used is for your jQuery plugin. Because of this, you may
+have to create a jQuery shim for your plugin, so you can ensure that jQuery will
+always be registered as an AMD module, even if jQuery was imported before an AMD
+loader.
+
+### Shimming jQuery as an AMD module
+
+Most AMD loaders allow defining modules multiple times under the same name, and
+it will make its own decision as to what module should be used. The jQuery
+module is generally reserved under the `jquery` name, so take care when shimming
+modules under the `jquery` name. Because jQuery always defines itself with the
+`window.jQuery` global, you can be confident that it contains a reference to
+jQuery, or a library which defines a compatible API.
+
+The easiest way to make a shim for the jQuery library is to create an AMD
+module, `jquery.js`, and use it as the named `jquery` module in the r.js builds.
+The shim can be as simple as the following, which is used in Select2:
+
+~~~ js
+define(function () {
+    return jQuery;
+});
+~~~
+
+This file is named `jquery.shim.js` and is defined in the `paths` section of the
+r.js config as `jquery: "jquery.shim"`, allowing it to be brought in
+automatically when building the project.
 
 [almond]: https://github.com/jrburke/almond
 [amd-plugins]: https://github.com/amdjs/amdjs-api/blob/master/LoaderPlugins.md
