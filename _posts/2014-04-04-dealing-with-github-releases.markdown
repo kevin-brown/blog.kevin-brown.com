@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Dealing with GitHub Releases
+title: Working with GitHub Releases
 author: kevin-brown
 date: 2014-04-04 20:30:00 EDT
 category: github
