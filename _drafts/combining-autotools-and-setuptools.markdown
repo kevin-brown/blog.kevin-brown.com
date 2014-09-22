@@ -83,6 +83,43 @@ be stored in. This is important, as the `builddir` may be different than the
 The last part, `--verbose`, tells setuptools to do it in verbose mode and can be
 omitted if needed.
 
+## `make install`
+
+When a user installs your program to their system, they should be using
+`make install`. This should work similarly to running `pip install .` or
+`setup.py install` in that it installs all of the code and any binary files to
+required locations. Automake allows you to override this with
+`install-exec-local`, which is run by `make install` and should install any
+executables.
+
+~~~
+install-exec-local:
+    $(PYTHON) $(srcdir)/setup.py install \
+        --prefix $(DESTDIR)$(prefix) \
+        --single-version-externally-managed \
+        --record $(DESTDIR)$(pkgpythondir)/install_files.txt \
+        --verbose
+~~~
+
+Similar to `make all`, the first part of this snippet runs `setup.py install`
+within the source directory. Also similar to the last command, there are a few
+critical flags that must be set when installing.
+
+The `--prefix` flag sets the install directory, which can be set by the user
+when configuring the program using `./configure --prefix`. This is important
+for systems where the executable install directory is not `/usr/local`. In our
+case, the install location is set to `$(DESTDIR)$(prefix)`, which allows for the
+destination directory to be set for distribution builds, as well as the prefix.
+
+We also use the verbose `--single-version-externally-managed` flag so we can
+record all of the installed files, making uninstallation considerably easier.
+This is used in combination with `--record` flag, which tells setuptools where
+to record a list of all of the files that were moved during the process.
+Similar to how pip does it, we store this file in the python package's
+directory, so it can be easily found and will not be removed because of other
+processes.
+
+
 [gnu-build]: https://en.wikipedia.org/wiki/GNU_build_system
 [pip]: https://pip.pypa.io/
 [setuptools]: https://pythonhosted.org/setuptools/
