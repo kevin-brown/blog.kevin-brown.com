@@ -2,7 +2,7 @@
 layout: post
 title: Combining GNU autotools and Python setuptools
 author: kevin-brown
-date: 2014-09-22 10:00:00 EDT
+date: 2014-09-22 16:00:00 EDT
 category: programming
 tags: python programming
 ---
@@ -137,6 +137,32 @@ to uninstall installed packages. This relies on the installed files being
 recorded during the installation process, and the same file is used to remove
 all of the extra installed files. We also make sure to completely remove the
 Python package directory, as this is not removed by default.
+
+# Modifying `setup.py` to cooperate with VPATH builds
+
+By default, `setup.py` will not work with VPATH builds. This will cause errors
+during installation, and will cause `make distcheck` to fail mysteriously as
+it entirely uses VPATH installs. In order make setuptools work with VPATH
+builds, the `setup` call must be modified to use the pathes that are passed to
+it during the build and install process.
+
+To start off our `setup.py` file, we define a variable that points at the
+relative source path.
+
+~~~ python
+import os
+
+SRC_PATH = os.path.relpath(os.path.join(os.path.dirname(__file__), "src"))
+~~~
+
+In our case, the source is located within the `src` directory, relative to the
+`setup.py` file. `SRC_PATH` contains the relative path to the source directory,
+which is required when later telling setuptools where the source is located, and
+cannot be relative when installed through pip. `__file__` contains the location
+of the current file, which in this case is the path to the `setup.py` file.
+
+This also takes VPATH builds into account, where the source path may be in a
+different directory than the build directory.
 
 [gnu-build]: https://en.wikipedia.org/wiki/GNU_build_system
 [pip]: https://pip.pypa.io/
