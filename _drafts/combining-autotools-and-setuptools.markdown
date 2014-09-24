@@ -138,13 +138,15 @@ recorded during the installation process, and the same file is used to remove
 all of the extra installed files. We also make sure to completely remove the
 Python package directory, as this is not removed by default.
 
-# Modifying `setup.py` to cooperate with VPATH builds
+# Modifying `setup.py` to work alongside Autotools
 
 By default, `setup.py` will not work with VPATH builds. This will cause errors
 during installation, and will cause `make distcheck` to fail mysteriously as
 it entirely uses VPATH installs. In order make setuptools work with VPATH
 builds, the `setup` call must be modified to use the pathes that are passed to
 it during the build and install process.
+
+## Relative source paths
 
 To start off our `setup.py` file, we define a variable that points at the
 relative source path.
@@ -161,8 +163,62 @@ which is required when later telling setuptools where the source is located, and
 cannot be relative when installed through pip. `__file__` contains the location
 of the current file, which in this case is the path to the `setup.py` file.
 
+~~~ python
+setup(
+    # ...
+    package_dir={
+        "": SRC_PATH,
+    },
+    # ...
+)
+~~~
+
 This also takes VPATH builds into account, where the source path may be in a
-different directory than the build directory.
+different directory than the build directory. For projects where the source code
+is not located within `src`, but instead is located on the same level as the
+`setup.py` file, this line may not be required.
+
+## Moving the generated `.egg-info` directory
+
+When you build a project using setuptools, an `.egg-info` directory will
+automatically be generated that contains all of the metadata associated with the
+project. This is used when installing and building distributable packages, and
+by default it is placed in the source directory, even if you tell setuptools to
+use a different build directory. You need to override the default `egg-info`
+command so it will place this directory in the build directory, not in the
+source directory, which is different only for VPATH builds.
+
+~~~ python
+from setuptools.command.egg_info import egg_info
+
+class EggInfoCommand(egg_info):
+
+    def run(self):
+        if "build" in self.distribution.command_obj:
+            build_command = self.distribution.command_obj["build"]
+
+            self.egg_base = build_command.build_base
+
+            self.egg_info = os.path.join(self.egg_base, os.path.basename(self.egg_info))
+
+        egg_info.run(self)
+
+setup(
+    # ...
+    cmdclass={
+        "egg_info": EggInfoCommand,
+    },
+    #...
+)
+~~~
+
+This snippet will only adjust the base directory if the build base was set as
+well during the build phase. Because we already set this in the default
+`make all` target, this should always work for VPATH builds done using Automake.
+The `egg_info` path must be modified as well as the `egg_base` as it is
+set earlier in the process and cannot be overridden on the command line while
+building the project.
+
 
 [gnu-build]: https://en.wikipedia.org/wiki/GNU_build_system
 [pip]: https://pip.pypa.io/
