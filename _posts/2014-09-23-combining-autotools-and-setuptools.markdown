@@ -2,7 +2,7 @@
 layout: post
 title: Combining GNU autotools and Python setuptools
 author: kevin-brown
-date: 2014-09-22 16:00:00 EDT
+date: 2014-09-23 22:00:00 EDT
 category: programming
 tags: python programming
 ---
