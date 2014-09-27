@@ -100,6 +100,10 @@ relies heavily on using VPATH builds, which were
 separate from the source files.  When building when CMake, the build type should
 be set to a release, so any included optimisations will be made.
 
+For builds on Fedora, or systems where packages are installed to `/usr` instead
+of `/usr/local` by default, you will need to set the build prefix as well using
+`-D CMAKE_INSTALL_PREFIX=/usr`.
+
 ~~~ bash
 $ cmake -D CMAKE_BUILD_TYPE=RELEASE -D PYTHON_EXECUTABLE=/usr/bin/python3 ..
 $ make -j4
