@@ -147,7 +147,7 @@ Python 2.
 Once you have installed OpenCV using `sudo make install`, you can verify that it
 has been installed by opening up the Python 3 shell.
 
-~~~
+~~~ python
 $ python3
 Python 3.4.0 (default, Apr 11 2014, 13:05:11)
 [GCC 4.8.2] on linux
@@ -161,7 +161,7 @@ ImportError: No module named 'cv'
 '/usr/local/lib/python3.4/dist-packages/cv2.cpython-34m.so'
 >>> cv2.__version__
 '3.0.0-dev'
->> exit()
+>>> exit()
 ~~~
 
 Your output may contain a different directory for the `cv2` file location, as it
@@ -179,7 +179,7 @@ OpenCV 3 in your projects.
 
 If you get a CMake error early in the process such as:
 
-~~~
+~~~ bash
 CMake Error: your CXX compiler: "CMAKE_CXX_COMPILER-NOTFOUND" was not found. Please set CMAKE_CXX_COMPILER to a valid compiler path or name.
 ~~~
 

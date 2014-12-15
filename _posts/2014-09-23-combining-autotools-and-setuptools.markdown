@@ -45,7 +45,7 @@ support VPATH builds, but not impossible. Before running the `build` command,
 we must tell Automake to move into that directory, and we must tell setuptools
 what the actual build directory is.
 
-~~~
+~~~ bash
 all-local:
     (cd $(srcdir); $(PYTHON) setup.py build \
         --build-base $(shell readlink -f $(builddir))/build \
@@ -61,10 +61,10 @@ by Automake that can be used from anywhere within the Makefile.
 The second part of this snippet is a bit more complex and consists of a few
 parts.
 
-~~~
+~~~ bash
 $(PYTHON) setup.py build \
     --build-base $(shell readlink -f $(builddir))/build \
-    --verbose`
+    --verbose
 ~~~
 
 The first section, `$(PYTHON) setup.py build`, tells Automake to use the
@@ -92,7 +92,7 @@ required locations. Automake allows you to override this with
 `install-exec-local`, which is run by `make install` and should install any
 executables.
 
-~~~
+~~~ bash
 install-exec-local:
     $(PYTHON) $(srcdir)/setup.py install \
         --prefix $(DESTDIR)$(prefix) \
@@ -126,7 +126,7 @@ using `make uninstall`. This should work exactly like `pip remove [program]`,
 and it must completely remove any traces of your program. You can override this
 target with `uninstall-local` so it will always be run.
 
-~~~
+~~~ bash
 uninstall-local:
     cat $(DESTDIR)$(pkgpythondir)/install_files.txt | xargs rm -rf
     rm -rf $(DESTDIR)$(pkgpythondir)

@@ -7,12 +7,18 @@
 
         <title>{{ page.title }} - Kevin Brown</title>
 
-        <link href="//kevinbrown.in/includes/bootstrap.min.css" rel="stylesheet" />
-        <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
-        <link href="//kevinbrown.in/styles/global.css" rel="stylesheet" />
+        <link rel="stylesheet" type="text/css" href="//kevinbrown.in/includes/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="//kevinbrown.in/styles/global.css">
 
-        <link rel="stylesheet" href="/styles/syntax.css">
-        <link rel="stylesheet" href="/styles/blog.css">
+        <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.css">
+        <link rel="stylesheet" type="text/css" href="/styles/blog.css">
+
+        <style type="text/css">
+        li.L0, li.L1, li.L2, li.L3,
+        li.L5, li.L6, li.L7, li.L8
+        { list-style-type: decimal !important }
+        </style>
     </head>
     <body>
         <header class="navbar navbar-inverse navbar-fixed-top">
@@ -66,5 +72,24 @@
         <div class="container blog-container">
             {{ content }}
         </div>
+
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
+        <script type="text/javascript">
+        if (document.querySelectorAll) {
+            var codeBlocks = document.querySelectorAll("pre code");
+
+            for (var c = 0; c < codeBlocks.length; c++) {
+                var code = codeBlocks[c];
+
+                var block = code.parentNode;
+
+                block.className += " prettyprint linenums";
+            }
+
+            console.log(codeBlocks);
+
+            prettyPrint();
+        }
+        </script>
     </body>
 </html>
