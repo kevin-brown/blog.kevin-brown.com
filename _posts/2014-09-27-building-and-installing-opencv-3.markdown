@@ -98,14 +98,14 @@ of the libraries and extensions for languages such as Python and Java.  It
 relies heavily on using VPATH builds, which were
 [mentioned in the Autotools post][autotools-python], so the build files can be
 separate from the source files.  When building when CMake, the build type should
-be set to a release, so any included optimisations will be made.
+be set to a release, so any included optimizations will be made.
 
 For builds on Fedora, or systems where packages are installed to `/usr` instead
 of `/usr/local` by default, you will need to set the build prefix as well using
 `-D CMAKE_INSTALL_PREFIX=/usr`.
 
 ~~~ bash
-$ cmake -D CMAKE_BUILD_TYPE=RELEASE -D PYTHON_EXECUTABLE=/usr/bin/python3 ..
+$ cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=$(python3 -c "import sys; print(sys.prefix)") -D PYTHON_EXECUTABLE=$(which python3) ..
 $ make -j4
 $ sudo make install
 ~~~
@@ -131,11 +131,9 @@ for all of the Python 3 directories, which will force it to install under Python
 
 ~~~ bash
 $ (cmake -D CMAKE_BUILD_TYPE=RELEASE
-         -D PYTHON_INCLUDE_DIR=/usr/include/python3.3m
-         -D PYTHON_NUMPY_INCLUDE_DIRS=/usr/lib64/python3.3/site-packages/numpy/core/include/
-         -D PYTHON_EXECUTABLE=/usr/bin/python3
-         -D PYTHON_LIBRARY=/lib64/libpython3.3m.so
-         -D PYTHON_PACKAGES_PATH=/usr/lib/python3.3/site-packages/ ..)
+         -D PYTHON_INCLUDE_DIR=$(python3 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())")
+         -D PYTHON_EXECUTABLE=$(which python3)
+         -D PYTHON_PACKAGES_PATH=$(python3 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())") ..)
 ~~~
 
 Because CMake sees 3.3 as being larger than 2.7, it will accept all Python 3
@@ -186,6 +184,35 @@ CMake Error: your CXX compiler: "CMAKE_CXX_COMPILER-NOTFOUND" was not found. Ple
 You may have forgotten to install a C++ compiler such as GCC.  Make sure that
 all of the dependencies stated at the start of this post are installed before
 trying again.
+
+## CMake won't detect the right version of Python
+
+If you get output after doing the `cmake` command that correctly detects your
+Python interpreter, but does not detect the version of it, then you most likely
+have an outdated version of CMake. This is most likely the case for anyone
+installing OpenCV on Ubuntu 12.04, as the version of CMake included is severely
+out of date.
+
+You can tell if it is not detecting the version number correctly, because the
+detected version will be blank.
+
+~~~
+--  Python 3:
+--    Interpreter:  /home/travis/virtualenv/python3.4.2/bin/python (ver )
+~~~
+
+You should make sure the version of CMake you have installed is above `2.8.8`.
+On Ubuntu 12.04, you can use the `kalakris/cmake` PPA to install an updated
+version of CMake.
+
+~~~ bash
+sudo add-apt-repository --yes ppa:kalakris/cmake
+sudo apt-get update -qq
+sudo apt-get install cmake
+~~~
+
+This will give you CMake `2.8.12`, which includes the updated Python version
+detection.
 
 [autotools-python]: /programming/2014/09/23/combining-autotools-and-setuptools.html
 [cmake]: https://en.wikipedia.org/wiki/CMake
