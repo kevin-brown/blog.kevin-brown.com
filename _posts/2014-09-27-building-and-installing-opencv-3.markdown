@@ -4,7 +4,7 @@ title: Building and Installing OpenCV 3
 author: kevin-brown
 date: 2014-09-27 16:30:00 EDT
 category: programming
-tags: python opencv programming
+tags: python opencv
 ---
 
 [OpenCV 3.0 alpha][opencv-alpha] was released in August, after long delays and

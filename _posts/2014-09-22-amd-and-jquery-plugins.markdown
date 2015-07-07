@@ -4,7 +4,7 @@ title: AMD and jQuery Plugins
 author: kevin-brown
 date: 2014-09-22 9:00:00 EDT
 category: programming
-tags: jquery select2 programming
+tags: jquery select2
 ---
 
 Especially for larger jQuery plugins, AMD seems like a reasonable pattern to use

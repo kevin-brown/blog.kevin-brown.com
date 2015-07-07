@@ -4,7 +4,7 @@ title: Getting into Open Source
 author: kevin-brown
 date: 2014-06-20 20:00:00 EDT
 category: foss
-tags: foss programming
+tags: foss
 ---
 
 With websites such as [GitHub][github] and [Bitbucket][bitbucket] opening up

@@ -4,7 +4,7 @@ title: The Future of Select2
 author: kevin-brown
 date: 2014-05-28 14:00:00 EDT
 category: select2
-tags: select2 programming
+tags: select2
 ---
 
 [Select2][select2] is a jQuery plugin that can be used as a replacement for

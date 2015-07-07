@@ -4,7 +4,7 @@ title: jQuery and JavaScript Performance
 author: kevin-brown
 date: 2014-12-14 20:30:00 EST
 category: select2
-tags: javascript jquery select2 programming
+tags: javascript jquery select2
 ---
 
 One of the biggest issues with older versions of Select2 was the slow

@@ -4,7 +4,7 @@ title: Combining GNU Autotools and Python setuptools
 author: kevin-brown
 date: 2014-09-23 22:00:00 EDT
 category: programming
-tags: python programming
+tags: python
 ---
 
 The [GNU build system][gnu-build] is often used to build projects for easy
