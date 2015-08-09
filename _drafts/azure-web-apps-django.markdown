@@ -92,11 +92,19 @@ It is recommended to use a service designed to store static files, such as [Azur
 
 ## Debugging your Django application
 
-More than likely you will encounter an issue at some point or another that only happens when Django is deployed to Azure, but does not happen locally.
+More than likely you will encounter an issue at some point or another that only happens when Django is deployed to Azure, but does not happen locally. This can happen for a number of reasons, ranging from different environments to failed deployments, and there are multiple places to look.
 
 ### Using Django's `DEBUG` setting
 
-It is highly recommended to tie this to an environment variable that can be set while in production, like `PRODUCTION`.
+It is highly recommended to tie this to an environment variable that can be set while in production, like `PRODUCTION`. The other possible option which may be a more secure option is to have a DEBUG environment variable and assume that if it is not present that the serve should be treated as a production environment.
+
+Python allows you to retrieve the contents of environment variables using the os.environ dictionary, where the key is the name of the variable you are trying to get the contents of. You can convert the contents to a boolean by casting it from a string.
+
+You can set environment variables within Azure Web Apps through the application settings. The application settings will be injected into your Web App as environment variablees, which makes it easy to keep sensitive information like application secrets outside of your code.
+
+These variables in your application settings will only be present in your production environment, so you will need to fall back to other values in development. Luckily, as of version 2.2 of PTVS, you can set local environment variables within your Python project configuration that will only be present when running your application locally through Visual Studio.
+
+Because your Python project is not going to be executed directly in production, these variables won't leak into it. But these variables will be included in your project configuration file, which will be stored in your code base, and shared across all developers on the project. It is not yet possible to set individual configuration settings that are stored independent of the proect configuration file, so you should avoid storing senstive information here. 
 
 ### The local development server
 
