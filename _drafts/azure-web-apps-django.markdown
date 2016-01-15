@@ -80,9 +80,160 @@ This blog post will focus on deploying a Django project, but many of the concept
 
 IIS is used when your Django application is deployed to Azure, but not when you are developing your application on your local system. You can set up WSGI handle to be used by setting the handler variable. This will not work with a virtual environment because the default handler is not aware of virtual environments, but PTVS provides a script for proxying requests into your virtual environment before passing them into your WSGI handler.
 
-An example web.config file has been included below, it expects that your handler can be accessed at for bar and that  your proxy script is located in the some directory.
+An example `web.config` file has been included below, it expects that your [wfastcgi] handler can be accessed at <code>D:\Python34\Scripts\wfastcgi.py</code> (the default for Python 3.4 on Azure) and that your proxy script is located in the some directory as your `web.config` file.
 
-A modified version of the proxy script is available below.
+~~~ xml
+<?xml version="1.0"?>
+<configuration>
+  <appSettings>
+    <add key="WSGI_ALT_VIRTUALENV_HANDLER" value="example.wsgi.application" />
+    <add key="WSGI_ALT_VIRTUALENV_ACTIVATE_THIS" value="D:\home\site\wwwroot\env\Scripts\python.exe" />
+    <add key="WSGI_HANDLER" value="virtualenv_proxy.get_venv_handler()" />
+    <add key="PYTHONPATH" value="D:\home\site\wwwroot" />
+    <add key="DJANGO_SETTINGS_MODULE" value="example.settings" />
+  </appSettings>
+  <system.web>
+    <compilation debug="false" targetFramework="4.0" />
+  </system.web>
+  <system.webServer>
+    <modules runAllManagedModulesForAllRequests="true" />
+    <handlers>
+      <add name="Python FastCGI" path="handler.fcgi" verb="*" modules="FastCgiModule" scriptProcessor="D:\Python34\python.exe|D:\Python34\Scripts\wfastcgi.py" resourceType="Unspecified" requireAccess="Script" />
+    </handlers>
+    <rewrite>
+      <rules>
+        <rule name="Configure Python" stopProcessing="true">
+          <match url="(.*)" ignoreCase="false" />
+          <action type="Rewrite" url="handler.fcgi/{R:1}" appendQueryString="true" />
+        </rule>
+      </rules>
+    </rewrite>
+  </system.webServer>
+</configuration>
+~~~
+
+A modified version of the proxy script is available below. It should be named `virtualenv_proxy.py` to line up with the `WSGI_HANLDER` setting in your `web.config` file.
+
+~~~ python
+ # ############################################################################
+ #
+ # Copyright (c) Microsoft Corporation.
+ #
+ # This source code is subject to terms and conditions of the Apache License, Version 2.0. A
+ # copy of the license can be found in the License.html file at the root of this distribution. If
+ # you cannot locate the Apache License, Version 2.0, please send an email to
+ # vspython@microsoft.com. By using this source code in any fashion, you are agreeing to be bound
+ # by the terms of the Apache License, Version 2.0.
+ #
+ # You must not remove this notice, or any other, from this software.
+ #
+ # ###########################################################################
+
+import datetime
+import os
+import sys
+
+if sys.version_info[0] == 3:
+    def to_str(value):
+        return value.decode(sys.getfilesystemencoding())
+
+    def execfile(path, global_dict):
+        """Execute a file"""
+        with open(path, 'r') as f:
+            code = f.read()
+        code = code.replace('\r\n', '\n') + '\n'
+        exec(code, global_dict)
+else:
+    def to_str(value):
+        return value.encode(sys.getfilesystemencoding())
+
+def log(txt):
+    """Logs fatal errors to a log file if WSGI_LOG env var is defined"""
+    log_file = os.environ.get('WSGI_LOG')
+    if log_file:
+        f = open(log_file, 'a+')
+        try:
+            f.write('%s: %s' % (datetime.datetime.now(), txt))
+        finally:
+            f.close()
+
+ptvsd_secret = os.getenv('WSGI_PTVSD_SECRET')
+if ptvsd_secret:
+    log('Enabling ptvsd ...\n')
+    try:
+        import ptvsd
+        try:
+            ptvsd.enable_attach(ptvsd_secret)
+            log('ptvsd enabled.\n')
+        except:
+            log('ptvsd.enable_attach failed\n')
+    except ImportError:
+        log('error importing ptvsd.\n');
+
+def get_wsgi_handler(handler_name):
+    if not handler_name:
+        raise Exception('WSGI_HANDLER env var must be set')
+
+    if not isinstance(handler_name, str):
+        handler_name = to_str(handler_name)
+
+    module_name, _, callable_name = handler_name.rpartition('.')
+    should_call = callable_name.endswith('()')
+    callable_name = callable_name[:-2] if should_call else callable_name
+    name_list = [(callable_name, should_call)]
+    handler = None
+
+    while module_name:
+        try:
+            handler = __import__(module_name, fromlist=[name_list[0][0]])
+            for name, should_call in name_list:
+                handler = getattr(handler, name)
+                if should_call:
+                    handler = handler()
+            break
+        except ImportError:
+            module_name, _, callable_name = module_name.rpartition('.')
+            should_call = callable_name.endswith('()')
+            callable_name = callable_name[:-2] if should_call else callable_name
+            name_list.insert(0, (callable_name, should_call))
+            handler = None
+
+    if handler is None:
+        raise ValueError('"%s" could not be imported' % handler_name)
+
+    return handler
+
+activate_this = os.getenv('WSGI_ALT_VIRTUALENV_ACTIVATE_THIS')
+if not activate_this:
+    raise Exception('WSGI_ALT_VIRTUALENV_ACTIVATE_THIS is not set')
+
+def get_virtualenv_handler():
+    log('Activating virtualenv with %s\n' % activate_this)
+    execfile(activate_this, dict(__file__=activate_this))
+
+    log('Getting handler %s\n' % os.getenv('WSGI_ALT_VIRTUALENV_HANDLER'))
+    handler = get_wsgi_handler(os.getenv('WSGI_ALT_VIRTUALENV_HANDLER'))
+    log('Got handler: %r\n' % handler)
+    return handler
+
+def get_venv_handler():
+    log('Activating venv with executable at %s\n' % activate_this)
+    import site
+    sys.executable = activate_this
+    old_sys_path, sys.path = sys.path, []
+
+    site.main()
+
+    sys.path.insert(0, '')
+    for item in old_sys_path:
+        if item not in sys.path:
+            sys.path.append(item)
+
+    log('Getting handler %s\n' % os.getenv('WSGI_ALT_VIRTUALENV_HANDLER'))
+    handler = get_wsgi_handler(os.getenv('WSGI_ALT_VIRTUALENV_HANDLER'))
+    log('Got handler: %r\n' % handler)
+    return handler
+~~~
 
 It has been modified to handle a few edge cases that were missed in the original version of the script.
 
@@ -104,7 +255,7 @@ You can set environment variables within Azure Web Apps through the application 
 
 These variables in your application settings will only be present in your production environment, so you will need to fall back to other values in development. Luckily, as of version 2.2 of PTVS, you can set local environment variables within your Python project configuration that will only be present when running your application locally through Visual Studio.
 
-Because your Python project is not going to be executed directly in production, these variables won't leak into it. But these variables will be included in your project configuration file, which will be stored in your code base, and shared across all developers on the project. It is not yet possible to set individual configuration settings that are stored independent of the proect configuration file, so you should avoid storing senstive information here. 
+Because your Python project is not going to be executed directly in production, these variables won't leak into it. But these variables will be included in your project configuration file, which will be stored in your code base, and shared across all developers on the project. It is not yet possible to set individual configuration settings that are stored independent of the proect configuration file, so you should avoid storing senstive information here.
 
 ### The local development server
 
@@ -122,6 +273,8 @@ By default, Kudu will prefer Node over Python and will assume that any project c
 
 You most likely don't need everything in the standard deployment script, but at least the default deployment scripts are public.
 
+
+
 [azure-blob-storage]: http://azure.microsoft.com/en-us/services/storage/blobs/
 [azure-web-apps]: http://azure.microsoft.com/en-us/services/app-service/web/
 [azure-web-apps-django]: https://azure.microsoft.com/en-us/documentation/articles/web-sites-python-create-deploy-django-app/
@@ -134,6 +287,7 @@ You most likely don't need everything in the standard deployment script, but at 
 [ptvs]: http://microsoft.github.io/PTVS/
 [ptvs-issue-175]: https://github.com/Microsoft/PTVS/issues/175
 [ptvs-issue-334]: https://github.com/Microsoft/PTVS/issues/334
+[wfastcgi]: https://pypi.python.org/pypi/wfastcgi
 
 [azure-web-apps-git]: https://azure.microsoft.com/en-us/documentation/articles/web-sites-publish-source-control/
 [django-debug-setting]: https://docs.djangoproject.com/en/1.8/ref/settings/#debug
