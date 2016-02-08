@@ -13,16 +13,16 @@ layout: default
 <div class="row post-content">
     <div class="col-sm-12">
         <span class="post-meta">
-            <i class="icon-calendar"></i> {{ page.date | date_to_long_string }}
+            <i class="fa fa-calendar"></i> {{ page.date | date_to_long_string }}
         </span>
         <span class="post-meta">
-            <i class="icon-user"></i> Posted by
+            <i class="fa fa-user"></i> Posted by
             <a href="https://github.com/{{ page.author }}">
                 @{{ page.author }}
             </a>
         </span>
         <span class="post-meta">
-            <i class="icon-tags"></i>
+            <i class="fa fa-tags"></i>
             {% for tag in page.tags %}
             <span class="label label-default">{{ tag }}</span>
             {% endfor %}

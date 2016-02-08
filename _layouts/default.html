@@ -7,11 +7,9 @@
 
         <title>{{ page.title }} - Kevin Brown</title>
 
-        <link rel="stylesheet" type="text/css" href="//kevin-brown.com/includes/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css">
-        <link rel="stylesheet" type="text/css" href="//kevin-brown.com/styles/global.css">
+        <link rel="stylesheet" type="text/css" href="https://kevin-brown.com/css/global.css">
 
-        <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.css">
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.css">
         <link rel="stylesheet" type="text/css" href="/styles/blog.css">
 
         <style type="text/css">
@@ -21,42 +19,41 @@
         </style>
     </head>
     <body>
-        <header class="navbar navbar-inverse navbar-fixed-top">
+        <header class="navbar navbar-default navbar-fixed-top">
             <div class="container">
                 <div class="navbar-header">
                     <a href="/" class="navbar-brand">Kevin Brown</a>
                 </div>
 
-                <nav class="collapse navbar-collapse" role="navigation">
+                <nav role="navigation">
                     <ul class="nav navbar-nav">
                         <li>
-                            <a href="https://kevin-brown.com/#/projects">
-                                Projects
+                            <a href="https://kevin-brown.com/projects.html">
+                                My work
                             </a>
                         </li>
-                        <li class="active">
+                        <li>
                             <a href="https://blog.kevin-brown.com/">
                                 Blog
                             </a>
                         </li>
-                    </ul>
-                    <ul class="nav navbar-nav pull-right">
+
                         <li>
                             <a href="https://github.com/kevin-brown">
-                                <i class="icon-github"></i>
+                                <i class="fa fa-github"></i>
                                 GitHub
                             </a>
                         </li>
                         <li>
                             <a href="https://careers.stackoverflow.com/kbrown">
-                                <i class="icon-file"></i>
+                                <i class="fa fa-file-text"></i>
                                 R&eacute;sum&eacute;
                             </a>
                         </li>
                         <li>
                             <a href="mailto:kevin@kevin-brown.com">
-                                <i class="icon-envelope"></i>
-                                Email
+                                <i class="fa fa-envelope"></i>
+                                Get in touch
                             </a>
                         </li>
                     </ul>
@@ -68,7 +65,7 @@
             {{ content }}
         </div>
 
-        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
         <script type="text/javascript">
         if (document.querySelectorAll) {
             var codeBlocks = document.querySelectorAll("pre code");
