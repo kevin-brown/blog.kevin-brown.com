@@ -28,27 +28,27 @@ OpenCV 3, some of which may already be installed.
 On a Debian based system such as Ubuntu, you can install all of these
 requirements with:
 
-~~~ bash
+{% highlight bash linenos %}
 $ sudo apt-get install cmake
 $ sudo apt-get install python3 python3-dev python3-numpy
 $ sudo apt-get install gcc
-~~~
+{% endhighlight %}
 
 On a Yum based system such as Fedora, you can install all of these requirements
 with:
 
-~~~ bash
+{% highlight bash linenos %}
 $ sudo yum install cmake
 $ sudo yum install python3 python3-devel python3-numpy
 $ sudo yum install gcc gcc-c++
-~~~
+{% endhighlight %}
 
 If your package system does not provide `numpy`, you can install it through
 `pip` (or `pip3`) with:
 
-~~~ bash
+{% highlight bash linenos %}
 $ sudo pip3 install numpy
-~~~
+{% endhighlight %}
 
 By this point, you should have all of the required dependencies installed.
 
@@ -62,16 +62,16 @@ copy on your system and extract it into a directory.
 If you have Git installed on your system, this is as simple as cloning the
 GitHub repository:
 
-~~~ bash
+{% highlight bash linenos %}
 git clone --branch 3.0.0-alpha --depth 1 https://github.com/Itseez/opencv.git
-~~~
+{% endhighlight %}
 
 or, if you are using a version of Git before 1.8:
 
-~~~ bash
+{% highlight bash linenos %}
 git clone https://github.com/Itseez/opencv.git
 git checkout 3.0.0-alpha
-~~~
+{% endhighlight %}
 
 ## Downloading the zip
 
@@ -87,11 +87,11 @@ been installed, we can start building OpenCV.  This will require you to move to
 the OpenCV source directory and make a subdirectory called `release`, where all
 of the generated release files will be generated.
 
-~~~ bash
+{% highlight bash linenos %}
 $ cd /path/to/opencv-3.0.0-alpha
 $ mkdir release
 $ cd release
-~~~
+{% endhighlight %}
 
 OpenCV uses [CMake][cmake], which is a cross-platform build tool, to build all
 of the libraries and extensions for languages such as Python and Java.  It
@@ -104,11 +104,11 @@ For builds on Fedora, or systems where packages are installed to `/usr` instead
 of `/usr/local` by default, you will need to set the build prefix as well using
 `-D CMAKE_INSTALL_PREFIX=/usr`.
 
-~~~ bash
+{% highlight bash linenos %}
 $ cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=$(python3 -c "import sys; print(sys.prefix)") -D PYTHON_EXECUTABLE=$(which python3) ..
 $ make -j4
 $ sudo make install
-~~~
+{% endhighlight %}
 
 CMake will generate a set of Makefiles that can build OpenCV by calling `make`,
 and later installed by calling `make install` as root.  As it can take a long
@@ -129,12 +129,12 @@ for all of the Python 3 directories, which will force it to install under Python
 **If you are installing for Python 2**, you can call `cmake` without any special
 `PYTHON_*` variables, and it should install it to Python 2 without any problems.
 
-~~~ bash
+{% highlight bash linenos %}
 $ (cmake -D CMAKE_BUILD_TYPE=RELEASE
          -D PYTHON_INCLUDE_DIR=$(python3 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())")
          -D PYTHON_EXECUTABLE=$(which python3)
          -D PYTHON_PACKAGES_PATH=$(python3 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())") ..)
-~~~
+{% endhighlight %}
 
 Because CMake sees 3.3 as being larger than 2.7, it will accept all Python 3
 paths in the Python 2 section, and later install under Python 3 instead of
@@ -145,7 +145,7 @@ Python 2.
 Once you have installed OpenCV using `sudo make install`, you can verify that it
 has been installed by opening up the Python 3 shell.
 
-~~~ python
+{% highlight python linenos %}
 $ python3
 Python 3.4.0 (default, Apr 11 2014, 13:05:11)
 [GCC 4.8.2] on linux
@@ -160,7 +160,7 @@ ImportError: No module named 'cv'
 >>> cv2.__version__
 '3.0.0-dev'
 >>> exit()
-~~~
+{% endhighlight %}
 
 Your output may contain a different directory for the `cv2` file location, as it
 varies depending on the system.  The version may also be different, but as long
@@ -177,9 +177,9 @@ OpenCV 3 in your projects.
 
 If you get a CMake error early in the process such as:
 
-~~~ bash
+{% highlight bash linenos %}
 CMake Error: your CXX compiler: "CMAKE_CXX_COMPILER-NOTFOUND" was not found. Please set CMAKE_CXX_COMPILER to a valid compiler path or name.
-~~~
+{% endhighlight %}
 
 You may have forgotten to install a C++ compiler such as GCC.  Make sure that
 all of the dependencies stated at the start of this post are installed before
@@ -196,20 +196,20 @@ out of date.
 You can tell if it is not detecting the version number correctly, because the
 detected version will be blank.
 
-~~~
+{% highlight text linenos %}
 --  Python 3:
 --    Interpreter:  /home/travis/virtualenv/python3.4.2/bin/python (ver )
-~~~
+{% endhighlight %}
 
 You should make sure the version of CMake you have installed is above `2.8.8`.
 On Ubuntu 12.04, you can use the `kalakris/cmake` PPA to install an updated
 version of CMake.
 
-~~~ bash
+{% highlight bash linenos %}
 sudo add-apt-repository --yes ppa:kalakris/cmake
 sudo apt-get update -qq
 sudo apt-get install cmake
-~~~
+{% endhighlight %}
 
 This will give you CMake `2.8.12`, which includes the updated Python version
 detection.

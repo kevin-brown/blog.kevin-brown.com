@@ -46,7 +46,7 @@ perfect if every letter had a diacritic, but this is almost never the case as
 diacritic marks tend to be few and far between when working with large data
 sets.
 
-~~~ js
+{% highlight js linenos %}
 function removeDiacritics(str) {
     var newStr = "", letter;
     for (var i = 0, len = str.length; i < len; i++) {
@@ -55,7 +55,7 @@ function removeDiacritics(str) {
     }
     return newStr;
 }
-~~~
+{% endhighlight %}
 
 This code iterates over every letter in the string, even if it probably doesn't
 need to be checked. While this doesn't affect performance _that_ much on smaller
@@ -77,13 +77,13 @@ the `replace` method is used to replace one string with another, but it can be
 used to [match regular expressions][mdn-regular-expressions] and replace only
 the part of the string that matches them.
 
-~~~ js
+{% highlight js linenos %}
 function removeDiacritics(str) {
     return str.replace(/[^\u0000-\u007E]/g, function(a) {
         return diacriticsMap[a] || a;
     });
 }
-~~~
+{% endhighlight %}
 
 This uses a regular expression matching all characters not within the
 [basic ASCII character set][ascii], allowing us to skip the characters which we
@@ -190,12 +190,12 @@ function by default as they implement their `.data` function in a way that
 eliminates much of the need. In these cases, you can polyfill the missing
 function with
 
-~~~ js
+{% highlight js linenos %}
 $.data = function (el, key, val) {
     var $el = $(el);
     return $el.data(key, val);
 }
-~~~
+{% endhighlight %}
 
 If you are working on a public plugin, you may want to avoid modifying the
 `$` object with a polyfill and instead create your own methods for getting and
@@ -220,7 +220,7 @@ As an example that will be used throughout this section, we are going to need to
 append 10,000 `<div>` tags to a common container. The resulting HTML should be
 close to the following:
 
-~~~ html
+{% highlight html linenos %}
 <div class="my-wrapper">
     <div class="test">My amazing div #0</div>
     <div class="test">My amazing div #1</div>
@@ -230,7 +230,7 @@ close to the following:
     <div class="test">My amazing div #9998</div>
     <div class="test">My amazing div #9999</div>
 </div>
-~~~
+{% endhighlight %}
 
 ## Append jQuery elements in bulk instead of individually
 
@@ -238,21 +238,21 @@ This is one of the most common recommendations when working with large
 collections of elements and jQuery. You should append all of your elements to
 the DOM at once, instead of doing it each time for each element that you create.
 
-~~~ js
+{% highlight js linenos %}
 var $wrapper = $(".my-wrapper");
 
 for (var i = 0; i < 10000; i++) {
   var $e = $('<div class="test">My amazing div #' + i + '</div>');
   $wrapper.append($e);
 }
-~~~
+{% endhighlight %}
 
 You should instead place everything into an array, and then pass the array to
 `.append` so it all happens at once. This will allow the browser to trigger a
 single repaint for the change, and you won't have to worry about the `.append`
 call being as slow.
 
-~~~ js
+{% highlight js linenos %}
 var $wrapper = $(".my-wrapper");
 var $_elements = [];
 
@@ -262,7 +262,7 @@ for (var i = 0; i < 10000; i++) {
 }
 
 $wrapper.append($_elements);
-~~~
+{% endhighlight %}
 
 ## jQuery is slow when parsing strings as HTML
 
@@ -282,7 +282,7 @@ We can create the `<div>` outside of jQuery using
 browser, and then have jQuery wrap it, which will allow us to skip jQuery's
 string parsing but still get the benefits of using jQuery.
 
-~~~ js
+{% highlight js linenos %}
 var $wrapper = $(".my-wrapper");
 var $_elements = [];
 
@@ -297,7 +297,7 @@ for (var i = 0; i < 10000; i++) {
 }
 
 $wrapper.append($_elements);
-~~~
+{% endhighlight %}
 
 This alone will improve the speed, as jQuery knows how to handle raw DOM
 elements better (and faster) than it knows how to handle HTML strings.
@@ -311,7 +311,7 @@ are adding the `test` class to the newly created `<div>` element, which is the
 same as setting the [`.className` property][mdn-class-name] on the DOM node,
 which is a property available on all browsers for setting classes on an element.
 
-~~~ js
+{% highlight js linenos %}
 var $wrapper = $(".my-wrapper");
 var $_elements = [];
 
@@ -327,7 +327,7 @@ for (var i = 0; i < 10000; i++) {
 }
 
 $wrapper.append($_elements);
-~~~
+{% endhighlight %}
 
 It is important to mention that the `.className` property contains all classes
 set on the element, separated by whitespace. In IE 8+, the

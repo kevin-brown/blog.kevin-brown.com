@@ -72,7 +72,7 @@ we [found a full answer on Stack Overflow][so-html-redirect] that explained how
 to handle the most common cases and ensure that users are redirected. For the
 benefit of those who are reading this, I've included the code below.
 
-~~~ html
+{% highlight html linenos %}
 <!DOCTYPE HTML>
 <html lang="en-US">
 <head>
@@ -88,7 +88,7 @@ We've moved to a new location!. If you are not redirected automatically, follow
 this <a href='http://example.com'>link the new location</a>.
 </body>
 </html>
-~~~
+{% endhighlight %}
 
 You need to change `example.com` to the location that you want to redirect your
 users to. This will automatically redirect all of your users to the new page,

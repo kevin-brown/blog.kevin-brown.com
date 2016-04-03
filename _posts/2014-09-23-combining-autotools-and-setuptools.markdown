@@ -45,12 +45,12 @@ support VPATH builds, but not impossible. Before running the `build` command,
 we must tell Automake to move into that directory, and we must tell setuptools
 what the actual build directory is.
 
-~~~ bash
+{% highlight bash linenos %}
 all-local:
     (cd $(srcdir); $(PYTHON) setup.py build \
         --build-base $(shell readlink -f $(builddir))/build \
         --verbose)
-~~~
+{% endhighlight %}
 
 The first part of this snippet, `cd $(srcdir);`, tells Automake to move into the
 source directory, where all of the Python code as well as the `setup.py` file
@@ -61,11 +61,11 @@ by Automake that can be used from anywhere within the Makefile.
 The second part of this snippet is a bit more complex and consists of a few
 parts.
 
-~~~ bash
+{% highlight bash linenos %}
 $(PYTHON) setup.py build \
     --build-base $(shell readlink -f $(builddir))/build \
     --verbose
-~~~
+{% endhighlight %}
 
 The first section, `$(PYTHON) setup.py build`, tells Automake to use the
 active Python binary to run the `setup.py build` command. This allows us to
@@ -92,14 +92,14 @@ required locations. Automake allows you to override this with
 `install-exec-local`, which is run by `make install` and should install any
 executables.
 
-~~~ bash
+{% highlight bash linenos %}
 install-exec-local:
     $(PYTHON) $(srcdir)/setup.py install \
         --prefix $(DESTDIR)$(prefix) \
         --single-version-externally-managed \
         --record $(DESTDIR)$(pkgpythondir)/install_files.txt \
         --verbose
-~~~
+{% endhighlight %}
 
 Similar to `make all`, the first part of this snippet runs `setup.py install`
 within the source directory. Also similar to the last command, there are a few
@@ -126,11 +126,11 @@ using `make uninstall`. This should work exactly like `pip remove [program]`,
 and it must completely remove any traces of your program. You can override this
 target with `uninstall-local` so it will always be run.
 
-~~~ bash
+{% highlight bash linenos %}
 uninstall-local:
     cat $(DESTDIR)$(pkgpythondir)/install_files.txt | xargs rm -rf
     rm -rf $(DESTDIR)$(pkgpythondir)
-~~~
+{% endhighlight %}
 
 This does not call `setup.py` at all, as by default setuptools provides no way
 to uninstall installed packages. This relies on the installed files being
@@ -151,11 +151,11 @@ it during the build and install process.
 To start off our `setup.py` file, we define a variable that points at the
 relative source path.
 
-~~~ python
+{% highlight python linenos %}
 import os
 
 SRC_PATH = os.path.relpath(os.path.join(os.path.dirname(__file__), "src"))
-~~~
+{% endhighlight %}
 
 In our case, the source is located within the `src` directory, relative to the
 `setup.py` file. `SRC_PATH` contains the relative path to the source directory,
@@ -163,7 +163,7 @@ which is required when later telling setuptools where the source is located, and
 cannot be relative when installed through pip. `__file__` contains the location
 of the current file, which in this case is the path to the `setup.py` file.
 
-~~~ python
+{% highlight python linenos %}
 setup(
     # ...
     package_dir={
@@ -171,7 +171,7 @@ setup(
     },
     # ...
 )
-~~~
+{% endhighlight %}
 
 This also takes VPATH builds into account, where the source path may be in a
 different directory than the build directory. For projects where the source code
@@ -188,7 +188,7 @@ use a different build directory. You need to override the default `egg-info`
 command so it will place this directory in the build directory, not in the
 source directory, which is different only for VPATH builds.
 
-~~~ python
+{% highlight python linenos %}
 from setuptools.command.egg_info import egg_info
 
 class EggInfoCommand(egg_info):
@@ -210,7 +210,7 @@ setup(
     },
     #...
 )
-~~~
+{% endhighlight %}
 
 This snippet will only adjust the base directory if the build base was set as
 well during the build phase. Because we already set this in the default

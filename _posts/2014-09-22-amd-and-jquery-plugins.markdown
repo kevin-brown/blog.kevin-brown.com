@@ -78,11 +78,11 @@ The easiest way to make a shim for the jQuery library is to create an AMD
 module, `jquery.js`, and use it as the named `jquery` module in the r.js builds.
 The shim can be as simple as the following, which is used in Select2:
 
-~~~ js
+{% highlight js linenos %}
 define(function () {
     return jQuery;
 });
-~~~
+{% endhighlight %}
 
 This file is named `jquery.shim.js` and is defined in the `paths` section of the
 r.js config as `jquery: "jquery.shim"`, allowing it to be brought in
