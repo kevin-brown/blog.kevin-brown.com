@@ -36,15 +36,15 @@ Visual Studio supports managing your virtual environment and installing packages
 
 Unfortunately Visual Studio does not support _upgrading_ packages within the IDE without working around the issue, because it by default runs the following command when installing a single package
 
-~~~ bash
+{% highlight bash linenos %}
 pip install [package-name]
-~~~
+{% endhighlight %}
 
 And the following command when installing from your `requirements.txt`
 
-~~~ bash
+{% highlight bash linenos %}
 pip install -r requirements.txt
-~~~
+{% endhighlight %}
 
 Both of these commands are missing the `--upgrade` argument, which instructs `pip` to upgrade existing packages if you have an older version already installed. To get around this when installing a single package, you can just include `--upgrade` before the package name when Visual Studio asks, because Visual Studio just passes the package name directly to `pip` and doesn't validate the name.
 
@@ -58,9 +58,9 @@ Django 1.7 introduced a [new migrations framework][django-migrations] that repla
 
 PTVS does not include targets for making migrations using [the `makemigrations` command][django-manage-makemigrations], so you must do this through PowerShell or the Command Prompt.
 
-~~~ bash
+{% highlight bash linenos %}
 python manage.py makemigrations
-~~~
+{% endhighlight %}
 
 When the `migrate` command is updated in a future version of PTVS, the `makemigrations` command will also most likely be added. Until then, you can follow the PTVS [ticket for the `makemigrations` target][ptvs-issue-334] on GitHub.
 
@@ -82,7 +82,7 @@ IIS is used when your Django application is deployed to Azure, but not when you 
 
 An example `web.config` file has been included below, it expects that your [wfastcgi] handler can be accessed at <code>D:\Python34\Scripts\wfastcgi.py</code> (the default for Python 3.4 on Azure) and that your proxy script is located in the some directory as your `web.config` file.
 
-~~~ xml
+{% highlight xml linenos %}
 <?xml version="1.0"?>
 <configuration>
   <appSettings>
@@ -110,11 +110,11 @@ An example `web.config` file has been included below, it expects that your [wfas
     </rewrite>
   </system.webServer>
 </configuration>
-~~~
+{% endhighlight %}
 
 A modified version of the proxy script is available below. It should be named `virtualenv_proxy.py` to line up with the `WSGI_HANLDER` setting in your `web.config` file.
 
-~~~ python
+{% highlight python linenos %}
  # ############################################################################
  #
  # Copyright (c) Microsoft Corporation.
@@ -233,7 +233,7 @@ def get_venv_handler():
     handler = get_wsgi_handler(os.getenv('WSGI_ALT_VIRTUALENV_HANDLER'))
     log('Got handler: %r\n' % handler)
     return handler
-~~~
+{% endhighlight %}
 
 It has been modified to handle a few edge cases that were missed in the original version of the script.
 
@@ -272,8 +272,6 @@ By default, Kudu will prefer Node over Python and will assume that any project c
 ### Crafting your custom deployment script
 
 You most likely don't need everything in the standard deployment script, but at least the default deployment scripts are public.
-
-
 
 [azure-blob-storage]: http://azure.microsoft.com/en-us/services/storage/blobs/
 [azure-web-apps]: http://azure.microsoft.com/en-us/services/app-service/web/
