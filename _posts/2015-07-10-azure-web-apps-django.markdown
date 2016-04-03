@@ -271,7 +271,7 @@ By default, Kudu will prefer Node over Python and will assume that any project c
 
 ### Crafting your custom deployment script
 
-You most likely don't need everything in the standard deployment script, but at least the default deployment scripts are public.
+You most likely don't need everything in the standard deployment script, but at least the [default deployment scripts are public][kudu-script-templates]. The deployment script are written in [KuduScript][kudu-script], which is more-or-less Bash, Batch, or PowerShell scripts that interact with the Kudu environment to perform the deployment of your application.
 
 [azure-blob-storage]: http://azure.microsoft.com/en-us/services/storage/blobs/
 [azure-web-apps]: http://azure.microsoft.com/en-us/services/app-service/web/
@@ -282,6 +282,7 @@ You most likely don't need everything in the standard deployment script, but at 
 [django-manage-makemigrations]: https://docs.djangoproject.com/en/1.8/ref/django-admin/#django-admin-makemigrations
 [django-manage-syncdb]: https://docs.djangoproject.com/en/1.8/ref/django-admin/#django-admin-syncdb
 [django-migrations]: https://docs.djangoproject.com/en/dev/topics/migrations/
+[kudu-script-templates]: https://github.com/projectkudu/KuduScript/tree/master/lib/templates
 [ptvs]: http://microsoft.github.io/PTVS/
 [ptvs-issue-175]: https://github.com/Microsoft/PTVS/issues/175
 [ptvs-issue-334]: https://github.com/Microsoft/PTVS/issues/334
