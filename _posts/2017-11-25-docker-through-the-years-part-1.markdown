@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Docker through the years: What I've learned from using Docker in production since 2014 (Part 1)
+title: "Docker through the years: What I've learned from using Docker in production since 2014 (Part 1)"
 author: kevin-brown
 date: 2017-11-25 19:00:00 EDT
 category: programming
