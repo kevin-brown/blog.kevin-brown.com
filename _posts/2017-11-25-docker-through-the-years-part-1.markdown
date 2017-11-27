@@ -13,7 +13,7 @@ We have been using [Docker][docker] at [Rediker Software][rediker] since May of 
 
 On the applications I have worked on, we had full control over the environment where they would be deployed in, as well as the environment where they would be developed. But what we learned early on is that these two environments quite often are not the same, even though ideally you would want them to be identical. This becomes even more important when you start to add in additional testing environments, whether it is in a pre-production environment or even during automated testing using continuous integration tools, since inconsistent environments can cause inconsistent deployments.
 
-Docker aims to isolate your entire environment down to a container image, which is similar in concept to a virtual machine image, that can be transferred in whole across machines to allow for exact replicas. The advantage that brought us to use Docker was the consistent build definition, provided through a `Dockerfile`, that allows us to create a new container image from scratch that should be consistent every time. The technology has existed to provide consistent configurations across servers for a while, such that changes could be consistently rolled out to servers, but in practice this resulted in servers with left over, unused files that occasionally contributed to inconsistencies across environments.
+Docker aims to isolate your entire environment down to a container image, which is similar in concept to a virtual machine image, that can be transferred in whole across machines to allow for exact replicas. The advantage that brought us to use Docker was the consistent build definition, [provided through a `Dockerfile`][docker-dockerfile], that allows us to create a new container image from scratch that should be consistent every time. The technology has existed to provide consistent configurations across servers for a while, such that changes could be consistently rolled out to servers, but in practice this resulted in servers with left over, unused files that occasionally contributed to inconsistencies across environments.
 
 When rolling out changes to production, the general goal is to have as little down time as possible while ensuring the most consistent deployments to all of your servers. With Docker, you no longer have to wait for the rest of your operating system to start up, reducing the amount of time it takes to start up the new versions of your application and allowing you to optimize start up time within just your own application. In the end, we were able to reduce the deployment time of our application from 5-10 minutes per machine, including verification, to just seconds.
 
@@ -37,7 +37,7 @@ Docker now allows you to use the [`ADD`][docker-add-command] or [`COPY`][docker-
 
 ## The ambassador pattern never worked
 
-When you are working with Docker containers that are spread across multiple machines, but still need to be able to communicate with each other, [the ambassado pattern][ambassador-pattern] used to be highly recommended for linking containers across machines. Now that [Docker links are considered legacy][docker-links], you don't see it recommended as often because the whole goal was to make Docker links work cleanly across machines. It became popular enough that [Docker even published a pre-build container][docker-hub-ambassador] for people to use if they wanted to set up their own ambassadors.
+When you are working with Docker containers that are spread across multiple machines, but still need to be able to communicate with each other, [the ambassado pattern][docker-ambassador-pattern] used to be highly recommended for linking containers across machines. Now that [Docker links are considered legacy][docker-links], you don't see it recommended as often because the whole goal was to make Docker links work cleanly across machines. It became popular enough that [Docker even published a pre-build container][docker-hub-ambassador] for people to use if they wanted to set up their own ambassadors.
 
 But for many applications, the ambassador pattern was broken by design. It required static IP addresses to be assigned to systems, since otherwise the IP address which you provided to the ambassador container would stop pointing to your machine if the dynamic IP address changed. But if you didn't want to use static IP addresses, and instead chose to use system hostnames to resolve your systems to their dynamic IP addresses, you had to deal with [Docker's DNS resolution][docker-dns] which often failed after a machine restarted.
 
@@ -63,14 +63,15 @@ In the next part of this series on our experiences running Docker in production,
 
 [amazon-ecr]: https://aws.amazon.com/ecr/
 [amazon-ecr-pricing]: https://aws.amazon.com/ecr/pricing/
-[ambassador-pattern]: https://docs.docker.com/engine/admin/ambassador_pattern_linking/
 [azure-blob-storage]: https://azure.microsoft.com/en-us/services/storage/blobs/
 [azure-container-registry]: https://azure.microsoft.com/en-us/services/container-registry/
 [azure-container-registry-pricing]: https://azure.microsoft.com/en-us/pricing/details/container-registry/
 [docker]: https://www.docker.com/
 [docker-add-command]: https://docs.docker.com/engine/reference/builder/#add
+[docker-ambassador-pattern]: https://docs.docker.com/engine/admin/ambassador_pattern_linking/
 [docker-build-secrets]: https://github.com/moby/moby/issues/33343
 [docker-copy-command]: https://docs.docker.com/engine/reference/builder/#copy
+[docker-dockerfile]: https://docs.docker.com/engine/reference/builder/
 [docker-dns]: https://docs.docker.com/engine/userguide/networking/default_network/configure-dns/
 [docker-ee-blog]: https://blog.docker.com/2017/03/docker-enterprise-edition/
 [docker-hub]: https://hub.docker.com/
