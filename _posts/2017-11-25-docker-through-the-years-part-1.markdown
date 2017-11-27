@@ -55,6 +55,12 @@ This storage problem extends to container registries held by other providers, su
 
 Now, in theory you could automatically prune old images or clean up unused image layers and cut down on the space that is used. But from our research at the time, it was dangerous to do this manually (and thus extra risky to do it automatically) and it involved a significant amount of time being spent verifying if images still needed to exist. So you could save some money on storage by spending a dedicated amount of time cleaning up the file system, but mostly likely that would be even more costly in the long run.
 
+## What's up next?
+
+A lot of what has been discussed so far was learned within our first year or so, [before Docker released their first stable 1.0 version][docker-stable-blog]. Most likely, you're not going to run into many of the issues that have currently been discussed because best practices are always changing.
+
+In the next part of this series on our experiences running Docker in production, I'm going to cover many of the issues we ran into after Docker stablized but before it [split into the Community Edition and Enterprise Edition][docker-ee-blog]. A lot of these issues are issues of scale, but they are ones that you are more likely to come across.
+
 [amazon-ecr]: https://aws.amazon.com/ecr/
 [amazon-ecr-pricing]: https://aws.amazon.com/ecr/pricing/
 [ambassador-pattern]: https://docs.docker.com/engine/admin/ambassador_pattern_linking/
@@ -66,6 +72,7 @@ Now, in theory you could automatically prune old images or clean up unused image
 [docker-build-secrets]: https://github.com/moby/moby/issues/33343
 [docker-copy-command]: https://docs.docker.com/engine/reference/builder/#copy
 [docker-dns]: https://docs.docker.com/engine/userguide/networking/default_network/configure-dns/
+[docker-ee-blog]: https://blog.docker.com/2017/03/docker-enterprise-edition/
 [docker-hub]: https://hub.docker.com/
 [docker-hub-ambassador]: https://hub.docker.com/r/docker/ambassador/
 [docker-hub-billing]: https://hub.docker.com/billing-plans/
@@ -73,5 +80,6 @@ Now, in theory you could automatically prune old images or clean up unused image
 [docker-networking]: https://docs.docker.com/engine/userguide/networking/
 [docker-registry-deploy]: https://docs.docker.com/registry/deploying/
 [docker-registry-insecure]: https://docs.docker.com/registry/insecure/
+[docker-stable-blog]: https://blog.docker.com/2014/06/its-here-docker-1-0/
 [rediker]: https://www.rediker.com/
 [understanding-docker-cache]: https://thenewstack.io/understanding-the-docker-cache-for-faster-builds/
