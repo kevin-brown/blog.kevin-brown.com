@@ -25,6 +25,19 @@ You also could reduce build times by reusing the same base image, which was adva
 
 If you are looking to use Docker now, using a custom base image has largely been replaced by the Docker layer cache. If you need a set of commands to be run across all of your images, you can just include the same set of commands at the top of all of your files, and the contents will be cached and re-used across builds.
 
+## You shouldn't need to install Git within your containers
+
+_Unless your application actually uses Git, in which case you are in the 1% of applications which actually need Git to be installed in their containers._
+
+The first Docker images that we built used Git to install the application code within containers, allowing us to ensure that the application code which was in the containers was consistent across environments. Even now, this is a common pattern in Docker-based applications that started using Docker early on, even though in almost all cases it is useless or counter-productive.
+
+Using Git within your Docker images mean either your application source needs to be public (such that any machine can pull down the Git repository) or your Docker image must be configured to authenticate with your Git repository (in which case, you probably are including keys within your container which isn't a great idea). We opted to go for the second method, which meant we had to create read-only keys for our repositories and store them within the images, and while this worked it meant that we needed to rotate the keys often and we needed to ensure our build machines had intenet. If [Docker build secrets][docker-build-secrets] was implemented, this would have been less of an issue.
+
+Docker now allows you to use the [`ADD`][docker-add-command] or [`COPY`][docker-copy-command] commands to add files from your local machine into the built image, which means you don't need to clone your code manually anymore.
+
 [docker]: https://www.docker.com/
+[docker-add-command]: https://docs.docker.com/engine/reference/builder/#add
+[docker-build-secrets]: https://github.com/moby/moby/issues/33343
+[docker-copy-command]: https://docs.docker.com/engine/reference/builder/#copy
 [rediker]: https://www.rediker.com/
 [understanding-docker-cache]: https://thenewstack.io/understanding-the-docker-cache-for-faster-builds/
