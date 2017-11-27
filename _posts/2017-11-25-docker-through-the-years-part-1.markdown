@@ -35,9 +35,22 @@ Using Git within your Docker images mean either your application source needs to
 
 Docker now allows you to use the [`ADD`][docker-add-command] or [`COPY`][docker-copy-command] commands to add files from your local machine into the built image, which means you don't need to clone your code manually anymore.
 
+## The ambassador pattern never worked
+
+When you are working with Docker containers that are spread across multiple machines, but still need to be able to communicate with each other, [the ambassado pattern][ambassador-pattern] used to be highly recommended for linking containers across machines. Now that [Docker links are considered legacy][docker-links], you don't see it recommended as often because the whole goal was to make Docker links work cleanly across machines. It became popular enough that [Docker even published a pre-build container][docker-hub-ambassador] for people to use if they wanted to set up their own ambassadors.
+
+But for many applications, the ambassador pattern was broken by design. It required static IP addresses to be assigned to systems, since otherwise the IP address which you provided to the ambassador container would stop pointing to your machine if the dynamic IP address changed. But if you didn't want to use static IP addresses, and instead chose to use system hostnames to resolve your systems to their dynamic IP addresses, you had to deal with [Docker's DNS resolution][docker-dns] which often failed after a machine restarted.
+
+Before [Docker networks][docker-networking] were introduced, your best bet for communicating with containers spread across machines were to hard-code the hostnames or IP addresses within your application and ensure the rest of your infrastructure was configured to ensure this didn't break. But things within Docker changed a lot before Docker 1.0, and even changed a bit afterwards, which made upgrading a risk when you were communicating across systems.
+
+[ambassador-pattern]: https://docs.docker.com/engine/admin/ambassador_pattern_linking/
 [docker]: https://www.docker.com/
 [docker-add-command]: https://docs.docker.com/engine/reference/builder/#add
 [docker-build-secrets]: https://github.com/moby/moby/issues/33343
 [docker-copy-command]: https://docs.docker.com/engine/reference/builder/#copy
+[docker-dns]: https://docs.docker.com/engine/userguide/networking/default_network/configure-dns/
+[docker-hub-ambassador]: https://hub.docker.com/r/docker/ambassador/
+[docker-links]: https://docs.docker.com/engine/userguide/networking/default_network/dockerlinks/
+[docker-networking]: https://docs.docker.com/engine/userguide/networking/
 [rediker]: https://www.rediker.com/
 [understanding-docker-cache]: https://thenewstack.io/understanding-the-docker-cache-for-faster-builds/
