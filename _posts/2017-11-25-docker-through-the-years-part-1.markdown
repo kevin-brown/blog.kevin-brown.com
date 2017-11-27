@@ -43,14 +43,35 @@ But for many applications, the ambassador pattern was broken by design. It requi
 
 Before [Docker networks][docker-networking] were introduced, your best bet for communicating with containers spread across machines were to hard-code the hostnames or IP addresses within your application and ensure the rest of your infrastructure was configured to ensure this didn't break. But things within Docker changed a lot before Docker 1.0, and even changed a bit afterwards, which made upgrading a risk when you were communicating across systems.
 
+## Hosting your own Docker registry server is costly and/or time consuming
+
+Especially when you only have two or three images, it seems like [a waste of money][docker-hub-billing] to purchase a subscription with [Docker Hub][docker-hub] to use the Docker-run registry. So you might think about [deploying your own Docker registry server][docker-registry-deploy] within your own infrastructure and using that instead. And that's what we did at Rediker for the first year, until we realized how much of a waste it was.
+
+Let me start off by saying that the process and documentation around running your own Docker registry server has improved over the years, so you're no longer sinking a week into the process when you want to set up a secured Docker registry server. We didn't have a week, so we set up an insecure one [(which is no longer allowed, for a reason)][docker-registry-insecure] and decided to push the three images we had at the time to it.
+
+The biggest problem with running your own registry server is the cost of the storage involved. Over the course of 1 year with 3 images, we racked up 800 GB of storage to hold all of our images (~30 images pushed every week) which was being stored within [Azure Blob Storage][azure-blob-storage]. This meant that we had a base cost of $17 per month for that storage alone, compared to the $7 spent on the base paid tier for Docker Hub. At that small of a scale it did not make sense, and once we started adding more images to the registry it would have just become considerably more costly, almost always costing more to manage our own storage rather than use Docker Hub.
+
+This storage problem extends to container registries held by other providers, such as the [Azure Container Registry][azure-container-registry] and [Amazon Elastic Container Registry (ECR)][amazon-ecr]. While Azure has [recently changed their pricing tiers][azure-container-registry-pricing] to be a flat charge based on storage usage, their pricing was previously tied to the cost of blob storage which means it would have scaled at the same rate as ours. The [Amazon ECR pricing][amazon-ecr-pricing] is considerably higher and still based on the blob storage pricing, which means it also would have suffered from the same issues of scale that we encountered.
+
+Now, in theory you could automatically prune old images or clean up unused image layers and cut down on the space that is used. But from our research at the time, it was dangerous to do this manually (and thus extra risky to do it automatically) and it involved a significant amount of time being spent verifying if images still needed to exist. So you could save some money on storage by spending a dedicated amount of time cleaning up the file system, but mostly likely that would be even more costly in the long run.
+
+[amazon-ecr]: https://aws.amazon.com/ecr/
+[amazon-ecr-pricing]: https://aws.amazon.com/ecr/pricing/
 [ambassador-pattern]: https://docs.docker.com/engine/admin/ambassador_pattern_linking/
+[azure-blob-storage]: https://azure.microsoft.com/en-us/services/storage/blobs/
+[azure-container-registry]: https://azure.microsoft.com/en-us/services/container-registry/
+[azure-container-registry-pricing]: https://azure.microsoft.com/en-us/pricing/details/container-registry/
 [docker]: https://www.docker.com/
 [docker-add-command]: https://docs.docker.com/engine/reference/builder/#add
 [docker-build-secrets]: https://github.com/moby/moby/issues/33343
 [docker-copy-command]: https://docs.docker.com/engine/reference/builder/#copy
 [docker-dns]: https://docs.docker.com/engine/userguide/networking/default_network/configure-dns/
+[docker-hub]: https://hub.docker.com/
 [docker-hub-ambassador]: https://hub.docker.com/r/docker/ambassador/
+[docker-hub-billing]: https://hub.docker.com/billing-plans/
 [docker-links]: https://docs.docker.com/engine/userguide/networking/default_network/dockerlinks/
 [docker-networking]: https://docs.docker.com/engine/userguide/networking/
+[docker-registry-deploy]: https://docs.docker.com/registry/deploying/
+[docker-registry-insecure]: https://docs.docker.com/registry/insecure/
 [rediker]: https://www.rediker.com/
 [understanding-docker-cache]: https://thenewstack.io/understanding-the-docker-cache-for-faster-builds/
