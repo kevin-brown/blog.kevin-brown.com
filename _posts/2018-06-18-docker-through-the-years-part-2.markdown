@@ -17,6 +17,11 @@ Shortly before the stable 1.0 release of Docker, they started to provide tooling
 
 During the Docker 1.2 release, [the idea of release policies was introduced][docker-1.4-restart-policies] which further simplified the process of defining how containers behaved during a restart of the host machine. This was a breaking change, something we would eventually become accustomed to dealing with in new releases, that resulted in any previously-created containers not restarting when the host machine came back online. This was because the default policy of restarting previously-running containers when the host machine started back up was no longer supported. Instead, you had to pick between `always`, which resulted in stopped and failed containers always starting up, or `on-failure`, which would only restart containers immediately after they failed. It wasn't until later versions of Docker that a restart policy, `unless-stopped`, was introduced that more closely matched the old behaviour of the Docker daemon.
 
+# Why is Docker taking ages to start building my container? It's not that complicated!
+
+At Rediker we have dockerized a variety of applications, both big and small, but at one point or another we found ourselves questioning: "We have great hardware backing these builds, why can we grab a coffee during the time that it takes for a build to start?" This was a question that was surprisingly difficult to answer, since the debug information during Docker builds did not previously include any information about how the container context was built. Instead, you had to have a working knowledge of how Docker built containers and how it was possible to use a Docker daemon not on your local machine to build containers. Even today, it's still not as obvious as it should be and we have still found ourselves scratching our heads when builds start slowing down. It's all being built locally, why can't it start immediately?
+
+
 [docker-1.4-restart-policies]: https://docs.docker.com/v1.4/reference/commandline/cli/#restart-policies
 [docker-through-part-1]: /programming/2017/11/25/docker-through-the-years-part-1.html
 [wikipedia-systemd]: https://en.wikipedia.org/wiki/Systemd
