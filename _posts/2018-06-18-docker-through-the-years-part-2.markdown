@@ -43,8 +43,24 @@ The process of switching from our own registry to Docker Hub was surprisingly si
 
 There are some cases where using Docker Hub is not an option and, especially at larger companies or those in regulated industries, you may need to look at alternate registries that meet your requirements. If you need an SLA or uptime guarentees, you are unlikely to find those with Docker Hub and as a result you are at the mercy of Docker to keep your registry online.
 
+## You should be adding files to your container image using the `COPY` command
+
+Docker provides two commands in your Dockerfile for adding files into your container image: [`ADD`][docker-builder-add] and [`COPY`][docker-builder-copy]. In all but a few less common use cases, you should be using the `COPY` command when building your Dockerfile for your container iamge.
+
+The Docker `ADD` command is very powerful, and it allows you to copy files into your container that might not necessarily be on your system. This is very helpful for when you need to always download the latest file from some website, such as an installer, since it means you don't need to install additional programs like `wget` or `curl` in order to download the file. You can also add a local tar archive into your container using `ADD` and Docker will untar it for you into the destination directory, which is useful for adding release packages into your container image. In practice though, very rarely do you need to call out to a remote file to be downloaded or decompress a local tar archive within the container, so it's not actually recommended to use the `ADD` command.
+
+Just like the `ADD` command, the Docker `COPY` command can copy a file located within your build context and place it within your container image at a specific location. But this is the only thing the `COPY` command does, which means it is tuned to make this work as quickly as possible. It's also the only way to add a local tar archive into your container without it being automatically decompressed, which is necessary when your Dockerfile relies on the local tar archive being in the orignal state. The `COPY` command can also be used to copy files from other stages within a multi-stage Dockerfile, which is often necessary if you need to have a specific build stage in your workflow.
+
+## What's in store for next time?
+
+In the [first post in this series][docker-through-part-1], I covered issues that we ran into during the first year of Docker's existence, many of which are no longer an issue because they are no longer being recommended as a best practice. For this post, much of which was discussed is still an issue that has not been corrected through best practice recommendations, and as a result it is very likely that you will encounter systems running Docker as well as Docker images that suffer from these problems.
+
+In the next part of this series, I am going to cover our experience running Docker in production after we migrated to [Docker Community Edition and Docker Enterprise Edition][docker-blog-ee]. These are the issues that are not covered by best practices at the moment, because they have only started to surface within the past year or so.
+
 
 [docker-1.4-restart-policies]: https://docs.docker.com/v1.4/reference/commandline/cli/#restart-policies
+[docker-blog-ee]: https://blog.docker.com/2017/03/docker-enterprise-edition/
+[docker-builder-add]: https://docs.docker.com/engine/reference/builder/#add
 [docker-builder-copy]: https://docs.docker.com/engine/reference/builder/#copy
 [docker-builder-dockerignore]: https://docs.docker.com/engine/reference/builder/#dockerignore-file
 [docker-through-part-1]: /programming/2017/11/25/docker-through-the-years-part-1.html
