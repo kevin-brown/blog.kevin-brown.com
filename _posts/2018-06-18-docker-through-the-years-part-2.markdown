@@ -17,7 +17,7 @@ Shortly before the stable 1.0 release of Docker, they started to provide tooling
 
 During the Docker 1.2 release, [the idea of release policies was introduced][docker-1.4-restart-policies] which further simplified the process of defining how containers behaved during a restart of the host machine. This was a breaking change, something we would eventually become accustomed to dealing with in new releases, that resulted in any previously-created containers not restarting when the host machine came back online. This was because the default policy of restarting previously-running containers when the host machine started back up was no longer supported. Instead, you had to pick between `always`, which resulted in stopped and failed containers always starting up, or `on-failure`, which would only restart containers immediately after they failed. It wasn't until later versions of Docker that a restart policy, `unless-stopped`, was introduced that more closely matched the old behaviour of the Docker daemon.
 
-# Why is Docker taking ages to start building my container? It's not that complex!
+## Why is Docker taking ages to start building my container? It's not that complex!
 
 At Rediker we have dockerized a variety of applications, both big and small, but at one point or another we found ourselves questioning: "We have great hardware backing these builds, why can we grab a coffee during the time that it takes for a build to start?" This was a question that was surprisingly difficult to answer, since the debug information during Docker builds did not previously include any information about how the container context was built. Instead, you had to have a working knowledge of how Docker built containers and how it was possible to use a Docker daemon not on your local machine to build containers. Even today, it's still not as obvious as it should be and we have still found ourselves scratching our heads when builds start slowing down. It's all being built locally, why can't it start immediately?
 
@@ -35,11 +35,20 @@ The best way to determine if a file should be included in your Docker context is
 
 If the answer is yes, then [add it to your `.dockerignore` file][docker-builder-dockerignore]. It's as easy as that. Any files that are matched by the patterns in your `.dockerignore` file will not be sent to the Docker daemon when building your image, and as a result they will not be available when you [use the `COPY` command][docker-builder-copy] to copy files into your container. So, if you need to copy a large file into your container during the build process you are out of luck. But if you don't need to, then you should be able to cut down the build time of your containers by a significant amount.
 
+## Docker Hub makes storing images simple, as long as you can use it
+
+I covered in the first part of this series that [running your own Docker registry server is costly][docker-through-part-1-registry] and you shouldn't be doing it. We didn't move to Docker Hub until late into our journey with Docker, when we finally realized that securing the server and maintaining it was costing more than just paying for Docker Hub to store our images.
+
+The process of switching from our own registry to Docker Hub was surprisingly simple. For a small period of time, we needed to push the images that we built to both our private Docker registry server as well as Docker Hub, to ensure processes which pulled these images could be migrated on a different schedule. Once we were essentially mirroring Docker images to both Docker registry servers, we were able to begin the process of migrating the deployment processes from using our private Docker registry server to using Docker Hub without losing any functionality. This required re-keying the servers where Docker images were pulled down to in order to have them support both registry servers, but the Docker configuration file makes this surprisingly easy to do without causing any compatibility issues. Not long after we confirmed that all systems were interacting with Docker Hub, we were able to remove our old Docker registry server from the process and eventually take it offline.
+
+There are some cases where using Docker Hub is not an option and, especially at larger companies or those in regulated industries, you may need to look at alternate registries that meet your requirements. If you need an SLA or uptime guarentees, you are unlikely to find those with Docker Hub and as a result you are at the mercy of Docker to keep your registry online.
+
 
 [docker-1.4-restart-policies]: https://docs.docker.com/v1.4/reference/commandline/cli/#restart-policies
-[docker-through-part-1]: /programming/2017/11/25/docker-through-the-years-part-1.html
 [docker-builder-copy]: https://docs.docker.com/engine/reference/builder/#copy
 [docker-builder-dockerignore]: https://docs.docker.com/engine/reference/builder/#dockerignore-file
+[docker-through-part-1]: /programming/2017/11/25/docker-through-the-years-part-1.html
+[docker-through-part-1-registry]: /programming/2017/11/25/docker-through-the-years-part-1.html#hosting-your-own-docker-registry-server-is-costly-andor-time-consuming
 [wikipedia-systemd]: https://en.wikipedia.org/wiki/Systemd
 [wikipedia-sysv-init]: https://en.wikipedia.org/wiki/Init#SysV-style
 [wikipedia-upstart]: https://en.wikipedia.org/wiki/Upstart
