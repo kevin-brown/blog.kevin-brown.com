@@ -1,0 +1,44 @@
+.project {
+    .panel-title {
+        font-size: 2em;
+    }
+
+    .panel-body {
+        img {
+            float: left;
+            margin-right: 1em;
+
+            @media (max-width: $grid-float-breakpoint) {
+                height: auto;
+                max-width: 30%;
+            }
+        }
+
+        p {
+            font-size: 1.5em;
+        }
+    }
+
+    .project-links {
+        margin-right: 1em;
+
+        a {
+            padding: 1em;
+        }
+    }
+
+    .project-tools {
+        span {
+            padding-right: 1em;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        img {
+            height: 60px;
+            width: 60px;
+        }
+    }
+}
