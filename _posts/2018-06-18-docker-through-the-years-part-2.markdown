@@ -7,7 +7,7 @@ category: programming
 tags: docker
 ---
 
-Much of what [the first post in this series][docker-through-part-1] covered was the first year or so of Docker's existence, all the way back in 2014, and while we kept it relevant, a lot has changed in the years following the stable 1.0 release of Docker. This post wihtin the series specifically focuses on what we like to call the "growing pains" phase of Docker, from the first stable 1.0 release to the 1.6.2 release, the last version supported on the update channel of Ubuntu 14.04 LTS. Unlike the first post, which covered what was learned within the first year of using Docker in production, this post will cover the next 3 years of using Docker in production, and what we learned duirng that time.
+Much of what [the first post in this series][docker-through-part-1] covered was the first year or so of Docker's existence, all the way back in 2014, and while we kept it relevant, a lot has changed in the years following the stable 1.0 release of Docker. This post within the series specifically focuses on what we like to call the "growing pains" phase of Docker, from the first stable 1.0 release to the 1.6.2 release, the last version supported on the update channel of Ubuntu 14.04 LTS. Unlike the first post, which covered what was learned within the first year of using Docker in production, this post will cover the next 3 years of using Docker in production, and what we learned duirng that time.
 
 ## Your server just restarted, do you know what happened to your containers?
 
