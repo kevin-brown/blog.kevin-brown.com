@@ -37,18 +37,40 @@ You can use Docker Compose in production too! This is especially useful when you
 
 ### Don't be afraid to start small
 
-When you're just starting out with Docker in production, it's not uncommon to see people trying to get a large container orchestration engine like Kubernetes up to serve the new Docker-powered application. But this is a mistake, and it's very common to see a migration to Docker fail quickly because they try to move a lot of things around at once. **Most people, when they're just starting out, don't need Kubernetes or Docker Swarm**, they need something quick and small that can allow them to get their Docker containers running in the same environment that they used to be run in. If you didn't have dynamic scaling, or container packing, or dynamic service configuration before, do you really need to focus on getting that set up right away when you switch to using Docker? The answer there is usually no, and it can often be pushed off to a different phase in the Docker migration process.
+When you're just starting out with Docker in production, it's not uncommon to see people trying to get a large container orchestration engine like Kubernetes up to serve the new Docker-powered application. But this is a mistake, and it's very common to see a migration to Docker fail quickly because they try to move a lot of things around at once. **Most people, when they're just starting out, don't need Kubernetes or Docker Swarm**, they need something quick and small that can allow them to get their Docker containers running in the same environment that they used to be run in. If you didn't have dynamic scaling, or container packing, or dynamic service configuration before, do you really need to focus on getting that set up right away when you switch to using Docker? The answer there is usually no and it can often be pushed off to a different phase in the Docker migration process.
+
+Deploying to a new production environment with Docker Compose is something I am planning on writing more on in a future blog post. There is a lot involved and often times people don't think of it when they are just starting out.
 
 ## Multi-stage builds can help consolidate Dockerfiles
 
+In the first post of this series, I mentioned that [you should never need to install Git within your Docker containers][docker-through-part-1-git] since you should be able to just use the `COPY` command to add the contents of your repository directly into your container. This still remains true, even when your are using Docker now, but I also proprose that **you should be able to set up your production application with a single Dockerfile**, regardless of your build process. It's important to note that this is for your _production application_ and not necessarily all of the components associated with it, such as your database or cache layer. Instead, I am referring to all of the components of your application which depend on your production code base. For a monolithic application, this would mean your entire application that includes all of the service and data layers, but for microservices this might be as small as a single microservice.
+
+One advantage that using Docker in production gives you is that you are not restricted to a single language or environment, since as long as it can be built into a Docker container it should be able to be deployed in production. As a result, we used a variety of languages within our Docker containers and across our application environments, but every time we found that we could easily combine the application containers down into a single `Dockerfile` that built it. This was the same for both monoliths (including 3-tier architecture) and microservices, scripting languages and compiled languages (including C#), statically generated (including React-based ones) and fully dynamic applications, and job-backed applications (including those requiring cron). In all cases, we were able to combine separately generated containers into a single Dockerfile with multiple build artifacts [using Docker's multi-stage builds][docker-multi-stage-build].
+
 ### You should not have a Dockerfile dedicated to building your application
+
+In many communities, such as the Go and C# communities, it used to be common to have a separate "build" Dockerfile (often called `Dockerfile.build`) which was responsible for building your application assets to be used in a different Dockerfile that would go to production. This was referred to as [the builder pattern][alexellis-builder-pattern] and it had many advantages and drawbacks, many of which were considered when designing [Docker's multi-stage builds][docker-multi-stage-build].
+
+* **Smaller production containers:** When you aren't including all of your build tools in your container, it tends to be considerably smaller when deployed.
+* **Production containers are always built consistently:** When using the builder pattern, it was possible for your production application container to be built with out-of-date assets.
+* **Build containers can be focused on doing specific things:** Instead of forcing all of your assets to be built in a single container, you can separate out distinct things like compiling assets in Node from the compiling the Go application itself.
+* **Only one Dockerfile to look at:** You no longer need to ask yourself "what file do we build that with?" when all of your containers are built out of the same file.
+
+Along the way, we've found ourselves asking many questions about how we want to build things. Oftentimes, we found ourselves coming up with creative solutions to problems that seemingly nobody had encountered before, but have since become common problems to encounter.
+
+* **Try to compile all of your static files into one location:** It's common to try to compile JavaScript and CSS, among other things, alongside of their source files. Things get much easier when you designate a directory like `/compiled/css` or `/compiled/js` to hold all of those statically generated files.
+* **If you can serve your static files separately, do it:** When people only consider the idea of having one Docker container, they generally resort to serving static files from the application container. If your application can be proxied behind something like Nginx or Apache, or can be served directly by them, consider just copying the static assets directly into that container.
+* **Need tools for testing? Don't install those in production-bound containers:** When you run your tests, you always want to try to keep it as close to production as possible. But this doesn't necessarily mean you should be installing these testing-specific tools into your production containers. Consider setting them up as a separate build target that extends from your production image, so you can keep them as close as possible.
 
 ### Try not to deploy build assets to production
 
+[alexellis-builder-pattern]: https://blog.alexellis.io/mutli-stage-docker-builds/
 [docker-compose]: https://docs.docker.com/compose/overview/
 [docker-compose-env-vars]: https://docs.docker.com/compose/environment-variables/
 [docker-compose-file]: https://docs.docker.com/compose/compose-file/
+[docker-multi-stage-build]: https://docs.docker.com/develop/develop-images/multistage-build/
 [docker-swarm-mode]: https://docs.docker.com/engine/swarm/
 [docker-through-part-1]: /programming/2017/11/25/docker-through-the-years-part-1.html
+[docker-through-part-1-git]: /programming/2017/11/25/docker-through-the-years-part-1.html#you-shouldnt-need-to-install-git-within-your-containers
 [docker-through-part-2]: /programming/2018/06/18/docker-through-the-years-part-2.html
 [kubernetes]: https://kubernetes.io/
