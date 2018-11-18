@@ -64,6 +64,14 @@ Along the way, we've found ourselves asking many questions about how we want to 
 
 ### Try not to deploy build assets to production
 
+When you are deploying your Docker containers to production, especially in environments where you are deploying your containers to many servers, it's important to consider the final size of your build images. This is especially notable in languages which are required to be compiled, such as C# and anything using the .NET Framework, where there are large tools including compilers that are definitely not needed in production, but this can also apply applications where some things need to be pre-built in order for them to be used in production environments.
+
+Build assets which often get sent to production come in a few different forms:
+
+* **Compilers that are only needed to build your application:** These often show up towards the top of your Dockerfile and produce build artifacts that can be easily copied into a production image.
+* **Development headers for built modules:** This is very common in languages which have bindings to languages such as C/C++ which are required to be installed in order for those modules to be built. Quite often these packages end in `-devel` and are only needed while those modules are built, but not afterwards when they are deployed to production.
+* **Assets that are used only to build other assets:** You tend to see this a lot with pre-compiled assets like SASS/LESS (for CSS) and TypeScript (for JS) where those files are not actually used in production and, in many cases, can take up far more space than the compiled versions of them.
+
 [alexellis-builder-pattern]: https://blog.alexellis.io/mutli-stage-docker-builds/
 [docker-compose]: https://docs.docker.com/compose/overview/
 [docker-compose-env-vars]: https://docs.docker.com/compose/environment-variables/
